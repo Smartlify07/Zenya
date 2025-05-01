@@ -1,18 +1,10 @@
 import { CommandIcon } from 'lucide-react';
-import { Button, buttonVariants } from './ui/button';
+import { buttonVariants } from './ui/button';
 import { useState } from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from './ui/dialog';
+import { Dialog, DialogContent, DialogTrigger } from './ui/dialog';
 import { IncomeForm } from './income-form';
 import { cn } from '@/lib/utils';
 export const QuickActions = () => {
-  const [showActions, setShowActions] = useState(false);
   const [selectedAction, setSelectedAction] = useState<
     'income' | 'expense' | null
   >(null);

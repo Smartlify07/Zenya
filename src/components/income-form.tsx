@@ -8,11 +8,9 @@ import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import {
@@ -53,10 +51,8 @@ export function IncomeForm() {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {}
-
-  function formatDate(date: Date) {
-    return `${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`;
+  function onSubmit(data: z.infer<typeof FormSchema>) {
+    console.log(data);
   }
 
   return (
