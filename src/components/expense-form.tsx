@@ -32,7 +32,7 @@ import { cn } from '@/lib/utils';
 import { CalendarIcon } from 'lucide-react';
 import { Calendar } from './ui/calendar';
 import { format } from 'date-fns';
-import { addExpense, addIncome } from '@/lib/actions';
+import { addExpense } from '@/lib/actions';
 import { useEffect } from 'react';
 const FormSchema = z.object({
   date: z.date(),
