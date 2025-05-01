@@ -11,7 +11,6 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import {
@@ -33,7 +32,7 @@ import { cn } from '@/lib/utils';
 import { CalendarIcon } from 'lucide-react';
 import { Calendar } from './ui/calendar';
 import { format } from 'date-fns';
-import { addIncome } from '@/lib/actions';
+import { addExpense, addIncome } from '@/lib/actions';
 import { useEffect } from 'react';
 const FormSchema = z.object({
   date: z.date(),
@@ -42,7 +41,7 @@ const FormSchema = z.object({
   category: z.string(),
 });
 
-export function IncomeForm() {
+export function ExpenseForm() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -54,9 +53,8 @@ export function IncomeForm() {
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    addIncome(data);
+    addExpense(data);
   }
-
   useEffect(() => {
     if (form.formState.isSubmitSuccessful)
       form.reset({
@@ -66,12 +64,13 @@ export function IncomeForm() {
         category: '',
       });
   }, [form.formState]);
+
   return (
     <div className="w-full flex flex-col gap-4">
       <DialogHeader>
-        <DialogTitle>Add income</DialogTitle>
+        <DialogTitle>Add Expense</DialogTitle>
         <DialogDescription>
-          Add a new income source to your account.
+          Add a new expense to your account.
         </DialogDescription>
       </DialogHeader>
       <Form {...form}>
@@ -83,7 +82,6 @@ export function IncomeForm() {
               <FormItem>
                 <FormLabel>Amount</FormLabel>
                 <Input type="number" {...field} />
-                <FormMessage />
               </FormItem>
             )}
           />
@@ -125,7 +123,6 @@ export function IncomeForm() {
                     />
                   </PopoverContent>
                 </Popover>
-                <FormMessage />
               </FormItem>
             )}
           />
@@ -136,9 +133,9 @@ export function IncomeForm() {
               <FormItem>
                 <FormLabel>Category</FormLabel>
                 <Select
-                  defaultValue={field.value}
                   value={field.value}
                   onValueChange={field.onChange}
+                  defaultValue={field.value}
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Transportation" />
@@ -151,7 +148,6 @@ export function IncomeForm() {
                     <SelectItem value="hardware">Hardware</SelectItem>
                   </SelectContent>
                 </Select>
-                <FormMessage />
               </FormItem>
             )}
           />
@@ -162,7 +158,6 @@ export function IncomeForm() {
               <FormItem>
                 <FormLabel>Notes</FormLabel>
                 <Textarea {...field} />
-                <FormMessage />
               </FormItem>
             )}
           />
