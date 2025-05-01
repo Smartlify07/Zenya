@@ -1,5 +1,4 @@
 import { Link } from '@tanstack/react-router';
-import { Button } from './ui/button';
 import { Logo } from './logo';
 import { QuickActions } from './quick-actions';
 
