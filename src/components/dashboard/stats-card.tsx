@@ -1,8 +1,7 @@
-import { Wallet, type LucideProps } from 'lucide-react';
+import { type LucideProps } from 'lucide-react';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,

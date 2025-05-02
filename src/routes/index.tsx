@@ -1,6 +1,6 @@
 import { StatCard } from '@/components/dashboard/stats-card';
 import { createFileRoute } from '@tanstack/react-router';
-import { CircleDollarSign, CreditCard, DollarSign, Wallet } from 'lucide-react';
+import { CircleDollarSign, CreditCard, Wallet } from 'lucide-react';
 
 export const Route = createFileRoute('/')({
   component: App,
