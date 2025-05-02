@@ -1,4 +1,4 @@
-import { Wallet } from 'lucide-react';
+import { Wallet, type LucideProps } from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -14,26 +14,31 @@ type StatCardProps = {
   amount: number;
   percentage: number;
   type: 'balance' | 'income' | 'expense';
+  Icon: React.ForwardRefExoticComponent<
+    Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
+  >;
 };
+
 export const StatCard = ({
   title,
   amount,
   percentage,
   type,
+  Icon,
 }: StatCardProps) => {
   return (
     <Card className="grid gap-2 font-inter rounded-md shadow-none col-span-1">
       <CardHeader className="grid gap-2">
         <div className="flex items-center justify-between">
-          <div
-            className={cn(
-              'rounded-md p-3 bg-neutral-50',
-              type === 'income' && 'text-purple-600',
-              type === 'expense' && 'text-red-600',
-              type === 'balance' && 'text-blue-600'
-            )}
-          >
-            <Wallet size={20} />
+          <div className={cn('rounded-md p-3 bg-neutral-50')}>
+            <Icon
+              className={cn(
+                type === 'income' && 'text-purple-600',
+                type === 'expense' && 'text-red-600',
+                type === 'balance' && 'text-blue-600'
+              )}
+              size={20}
+            />
           </div>
         </div>
         <CardTitle>
