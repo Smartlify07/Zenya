@@ -60,7 +60,12 @@ export function IncomeForm({
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    addIncome(data, dispatch);
+    const { date, ...rest } = data;
+    const newData = {
+      ...rest,
+      date: new Date(date).toISOString(),
+    };
+    addIncome(newData, dispatch);
     setShowForm(false);
   }
 
