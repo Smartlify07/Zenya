@@ -1,0 +1,39 @@
+import type { Expense } from '@/types';
+import { Separator } from '../ui/separator';
+import { Badge } from '../ui/badge';
+import { format } from 'date-fns';
+import { CATEGORY_COLORS } from '@/lib/utils';
+
+export const ExpenseCard = ({ expense }: { expense: Expense }) => {
+  return (
+    <div className="border-b py-4 px-2 flex justify-between">
+      <div className="flex flex-col gap-2 w-8/12">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-base font-medium">{expense?.payee}</h1>
+          <div className="flex gap-2 h-5">
+            <p className="text-sm text-neutral-800">
+              ₦{expense.amount.toLocaleString()}
+            </p>
+            <Separator orientation="vertical" />
+            <p className="text-sm text-neutral-800">
+              Date of Expense: {format(new Date(expense.date), 'PPP')}
+            </p>
+          </div>
+        </div>
+        <p className="rounded-sm truncate flex gap-1 items-center h-6 w-fit text-start text-sm text-neutral-600 bg-neutral-100 py-0.5 px-2">
+          <Separator
+            className="data-[orientation=vertical]:w-1 h-5 rounded-lg"
+            orientation="vertical"
+          />
+          {expense.notes}
+        </p>
+      </div>
+      <Badge
+        className={`self-end ${CATEGORY_COLORS[expense.category]}`}
+        variant="outline"
+      >
+        {expense.category}
+      </Badge>
+    </div>
+  );
+};
