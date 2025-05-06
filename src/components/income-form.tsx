@@ -35,6 +35,7 @@ import { Calendar } from './ui/calendar';
 import { format } from 'date-fns';
 import { addIncome } from '@/lib/actions';
 import { useEffect } from 'react';
+import { useFinance } from '@/hooks/useFinance';
 const FormSchema = z.object({
   date: z.date(),
   notes: z.string().optional(),
@@ -42,7 +43,12 @@ const FormSchema = z.object({
   category: z.string(),
 });
 
-export function IncomeForm() {
+export function IncomeForm({
+  setShowForm,
+}: {
+  setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  const { dispatch } = useFinance();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -54,7 +60,8 @@ export function IncomeForm() {
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    addIncome(data);
+    addIncome(data, dispatch);
+    setShowForm(false);
   }
 
   useEffect(() => {
