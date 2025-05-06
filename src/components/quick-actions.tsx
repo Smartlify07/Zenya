@@ -11,6 +11,7 @@ export const QuickActions = () => {
     'income' | 'expense' | null
   >(null);
   const [showActions, setShowActions] = useState(false);
+  const [showForm, setShowForm] = useState(false);
   const actionsRef = useRef<HTMLDivElement>(null);
   useClickOutside(actionsRef, () => setShowActions(false));
   return (
@@ -32,43 +33,51 @@ export const QuickActions = () => {
             ref={actionsRef}
             className="bg-white flex flex-col absolute w-full gap-1 rounded-lg shadow-lg border p-2"
           >
-            <DialogTrigger>
-              <div
-                onClick={() => setSelectedAction('income')}
-                className={cn(
-                  `w-full cursor-pointer flex justify-start items-center`,
-                  buttonVariants({
-                    variant: 'ghost',
-                    className:
-                      'w-full cursor-pointer flex justify-start items-center',
-                  })
-                )}
-              >
-                Add Income
-              </div>
+            <DialogTrigger
+              onClick={() => {
+                setSelectedAction('income');
+                setShowForm(true);
+              }}
+              className={cn(
+                `w-full cursor-pointer flex justify-start items-center`,
+                buttonVariants({
+                  variant: 'ghost',
+                  className:
+                    'w-full cursor-pointer flex justify-start items-center',
+                })
+              )}
+            >
+              Add Income
             </DialogTrigger>
-            <DialogTrigger>
-              <div
-                onClick={() => setSelectedAction('expense')}
-                className={cn(
-                  `w-full cursor-pointer flex justify-start items-center`,
-                  buttonVariants({
-                    variant: 'ghost',
-                    className:
-                      'w-full cursor-pointer flex justify-start items-center',
-                  })
-                )}
-              >
-                Add Expense
-              </div>
+            <DialogTrigger
+              onClick={() => {
+                setSelectedAction('expense');
+                setShowForm(true);
+              }}
+              className={cn(
+                `w-full cursor-pointer flex justify-start items-center`,
+                buttonVariants({
+                  variant: 'ghost',
+                  className:
+                    'w-full cursor-pointer flex justify-start items-center',
+                })
+              )}
+            >
+              Add Expense
             </DialogTrigger>
           </div>
         )}
 
-        <DialogContent>
-          {selectedAction === 'income' && <IncomeForm />}
-          {selectedAction === 'expense' && <ExpenseForm />}
-        </DialogContent>
+        {showForm && (
+          <DialogContent>
+            {selectedAction === 'income' && (
+              <IncomeForm setShowForm={setShowForm} />
+            )}
+            {selectedAction === 'expense' && (
+              <ExpenseForm setShowForm={setShowForm} />
+            )}
+          </DialogContent>
+        )}
       </Dialog>
     </div>
   );

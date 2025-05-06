@@ -34,6 +34,7 @@ import { Calendar } from './ui/calendar';
 import { format } from 'date-fns';
 import { addExpense } from '@/lib/actions';
 import { useEffect } from 'react';
+import { useFinance } from '@/hooks/useFinance';
 const FormSchema = z.object({
   date: z.date(),
   notes: z.string().optional(),
@@ -41,7 +42,11 @@ const FormSchema = z.object({
   category: z.string(),
 });
 
-export function ExpenseForm() {
+export function ExpenseForm({
+  setShowForm,
+}: {
+  setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -51,9 +56,11 @@ export function ExpenseForm() {
       category: '',
     },
   });
+  const { dispatch } = useFinance();
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    addExpense(data);
+    addExpense(data, dispatch);
+    setShowForm(false);
   }
   useEffect(() => {
     if (form.formState.isSubmitSuccessful)
