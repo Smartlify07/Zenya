@@ -35,6 +35,7 @@ import { format } from 'date-fns';
 import { addExpense } from '@/lib/actions';
 import { useEffect } from 'react';
 import { useFinance } from '@/hooks/useFinance';
+import { toast } from 'sonner';
 const FormSchema = z.object({
   date: z.date(),
   notes: z.string().optional(),
@@ -62,10 +63,18 @@ export function ExpenseForm({
     const { date, ...rest } = data;
     const newData = {
       ...rest,
-      date: date.toISOString(),
+      date: format(new Date(date), 'yyyy-MM-dd'),
     };
     addExpense(newData, dispatch);
     setShowForm(false);
+    toast.success('Expense added successfully', {
+      description: `You have added a new expense of ₦
+${newData.amount.toLocaleString()} for ${format(
+        new Date(newData.date),
+        'PPP'
+      )}`,
+      duration: 3000,
+    });
   }
   useEffect(() => {
     if (form.formState.isSubmitSuccessful)
@@ -131,7 +140,6 @@ export function ExpenseForm({
                       disabled={(date) =>
                         date > new Date() || date < new Date('1900-01-01')
                       }
-                      initialFocus
                     />
                   </PopoverContent>
                 </Popover>

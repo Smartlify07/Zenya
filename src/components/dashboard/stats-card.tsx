@@ -1,11 +1,5 @@
 import { type LucideProps } from 'lucide-react';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '../ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { cn } from '@/lib/utils';
 
 type StatCardProps = {
@@ -18,13 +12,7 @@ type StatCardProps = {
   >;
 };
 
-export const StatCard = ({
-  title,
-  amount,
-  percentage,
-  type,
-  Icon,
-}: StatCardProps) => {
+export const StatCard = ({ title, amount, type, Icon }: StatCardProps) => {
   return (
     <Card className="grid gap-2 font-inter rounded-md shadow-none col-span-1">
       <CardHeader className="grid gap-2">
@@ -46,10 +34,10 @@ export const StatCard = ({
       </CardHeader>
       <CardContent className="grid gap-2 mt-1">
         <h3 className="text-neutral-900 text-xl font-semibold">
-          ${amount.toLocaleString()}
+          ₦{amount.toLocaleString()}
         </h3>
       </CardContent>
-      <CardFooter className="grid gap-2">
+      {/* <CardFooter className="grid gap-2">
         <div className="flex items-center justify-between">
           <p className="text-neutral-500 text-sm font-medium">
             From last month
@@ -65,7 +53,7 @@ export const StatCard = ({
             +{percentage}%
           </p>
         </div>
-      </CardFooter>
+      </CardFooter> */}
     </Card>
   );
 };

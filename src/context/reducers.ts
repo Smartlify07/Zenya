@@ -13,6 +13,9 @@ export const financeReducer = (state: FinanceState, action: ActionTypes) => {
         loading: false,
         incomes: newIncomes,
         totalIncome: state.totalIncome + action.payload.amount,
+
+        totalBalance:
+          state.totalIncome + action.payload.amount - state.totalExpenses,
       };
     }
 
@@ -23,6 +26,8 @@ export const financeReducer = (state: FinanceState, action: ActionTypes) => {
         loading: false,
         expenses: newExpenses,
         totalExpenses: state.totalExpenses + action.payload.amount,
+        totalBalance:
+          state.totalIncome - (state.totalExpenses + action.payload.amount),
       };
     }
     case 'GET_EXPENSES': {
