@@ -2,9 +2,16 @@ import type { Income } from '@/types';
 import { Separator } from '../ui/separator';
 import { Badge } from '../ui/badge';
 import { format } from 'date-fns';
-import { CATEGORY_COLORS } from '@/lib/utils';
+import { CATEGORY_COLORS, incomeCategories } from '@/lib/utils';
+import { useMemo } from 'react';
 
 export const IncomeCard = ({ income }: { income: Income }) => {
+  const categoryLabel = useMemo(() => {
+    return (
+      incomeCategories.find((category) => category.id === income.category)
+        ?.label ?? ''
+    );
+  }, [incomeCategories]);
   return (
     <div className="border-b py-4 px-2 flex justify-between">
       <div className="flex flex-col gap-2 w-8/12">
@@ -32,7 +39,7 @@ export const IncomeCard = ({ income }: { income: Income }) => {
         className={`self-end ${CATEGORY_COLORS[income.category]}`}
         variant="outline"
       >
-        {income.category}
+        {categoryLabel}
       </Badge>
     </div>
   );
