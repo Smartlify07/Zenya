@@ -1,5 +1,6 @@
 import { DashboardTopNav } from '@/components/dashboard/top-nav';
 import Sidebar from '@/components/Sidebar';
+import { Toaster } from '@/components/ui/sonner';
 import FinanceProvider from '@/context/FinanceProvider';
 import { Outlet, createRootRoute } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
@@ -14,6 +15,7 @@ export const Route = createRootRoute({
           <Outlet />
         </section>
       </FinanceProvider>
+      <Toaster richColors />
       <TanStackRouterDevtools />
     </main>
   ),
