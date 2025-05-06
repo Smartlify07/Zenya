@@ -3,6 +3,7 @@ import { ExpenseCard } from '../cards/expense-card';
 
 export const ExpenseOverview = () => {
   const { expenses } = useFinance();
+
   return (
     <section className="font-inter rounded-lg w-full  flex flex-col gap-1 py-2">
       <header>
