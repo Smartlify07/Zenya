@@ -29,19 +29,21 @@ import {
 } from './ui/select';
 import { Textarea } from './ui/textarea';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { cn } from '@/lib/utils';
+import { cn, incomeCategories } from '@/lib/utils';
 import { CalendarIcon } from 'lucide-react';
 import { Calendar } from './ui/calendar';
 import { format } from 'date-fns';
 import { addIncome } from '@/lib/actions';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useFinance } from '@/hooks/useFinance';
 import { toast } from 'sonner';
+import { v4 } from 'uuid';
 const FormSchema = z.object({
   date: z.date(),
   notes: z.string().optional(),
   amount: z.coerce.number(),
   category: z.string(),
+  source: z.string().optional(),
 });
 
 export function IncomeForm({
@@ -57,14 +59,23 @@ export function IncomeForm({
       date: new Date(),
       amount: 0,
       category: '',
+      source: '',
     },
   });
+
+  const randomCategory = useMemo(() => {
+    return incomeCategories[
+      Math.floor(Math.random() * incomeCategories.length - 1) ??
+        'Client Projects'
+    ].label;
+  }, [incomeCategories]);
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     const { date, ...rest } = data;
     const newData = {
       ...rest,
       date: format(new Date(date), 'yyyy-MM-dd'),
+      id: v4(),
     };
     addIncome(newData, dispatch);
     setShowForm(false);
@@ -103,6 +114,17 @@ export function IncomeForm({
               <FormItem>
                 <FormLabel>Amount</FormLabel>
                 <Input type="number" {...field} />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="source"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Source</FormLabel>
+                <Input type="text" {...field} />
                 <FormMessage />
               </FormItem>
             )}
@@ -160,14 +182,16 @@ export function IncomeForm({
                   onValueChange={field.onChange}
                 >
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Transportation" />
+                    <SelectValue
+                      placeholder={randomCategory ?? 'Client Project'}
+                    />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="software">Software</SelectItem>
-                    <SelectItem value="transportation">
-                      Transportation
-                    </SelectItem>
-                    <SelectItem value="hardware">Hardware</SelectItem>
+                    {incomeCategories.map((category) => (
+                      <SelectItem value={category.id} key={category.id}>
+                        {category.label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />

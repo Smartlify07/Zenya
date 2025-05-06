@@ -1,7 +1,9 @@
 import { StatCard } from '@/components/dashboard/stats-card';
+import { ExpenseOverview } from '@/components/dashboard/expense-overview';
 import { useFinance } from '@/hooks/useFinance';
 import { createFileRoute } from '@tanstack/react-router';
 import { CircleDollarSign, CreditCard, Wallet } from 'lucide-react';
+import { IncomesOverview } from '@/components/dashboard/incomes-overview';
 
 export const Route = createFileRoute('/')({
   component: Dashboard,
@@ -34,6 +36,11 @@ function Dashboard() {
           percentage={30}
         />
       </div>
+
+      <section className="grid py-5 gap-6">
+        <ExpenseOverview />
+        <IncomesOverview />
+      </section>
     </main>
   );
 }

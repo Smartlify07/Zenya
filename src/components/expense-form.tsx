@@ -3,6 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { v4 } from 'uuid';
 
 import { Button, buttonVariants } from '@/components/ui/button';
 import {
@@ -28,15 +29,17 @@ import {
 } from './ui/select';
 import { Textarea } from './ui/textarea';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { cn } from '@/lib/utils';
+import { cn, expenseCategories } from '@/lib/utils';
 import { CalendarIcon } from 'lucide-react';
 import { Calendar } from './ui/calendar';
 import { format } from 'date-fns';
 import { addExpense } from '@/lib/actions';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useFinance } from '@/hooks/useFinance';
 import { toast } from 'sonner';
 const FormSchema = z.object({
+  payee: z.string().optional(),
+
   date: z.date(),
   notes: z.string().optional(),
   amount: z.coerce.number(),
@@ -51,6 +54,7 @@ export function ExpenseForm({
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
+      payee: '',
       notes: '',
       date: new Date(),
       amount: 0,
@@ -59,10 +63,18 @@ export function ExpenseForm({
   });
   const { dispatch } = useFinance();
 
+  const randomCategory = useMemo(() => {
+    return expenseCategories[
+      Math.floor(Math.random() * expenseCategories.length - 1) ??
+        'Client Projects'
+    ].label;
+  }, [expenseCategories]);
+
   function onSubmit(data: z.infer<typeof FormSchema>) {
     const { date, ...rest } = data;
     const newData = {
       ...rest,
+      id: v4(),
       date: format(new Date(date), 'yyyy-MM-dd'),
     };
     addExpense(newData, dispatch);
@@ -83,6 +95,7 @@ ${newData.amount.toLocaleString()} for ${format(
         notes: '',
         amount: 0,
         category: '',
+        payee: '',
       });
   }, [form.formState]);
 
@@ -103,6 +116,16 @@ ${newData.amount.toLocaleString()} for ${format(
               <FormItem>
                 <FormLabel>Amount</FormLabel>
                 <Input type="number" {...field} />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="payee"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Payee</FormLabel>
+                <Input type="text" {...field} />
               </FormItem>
             )}
           />
@@ -158,14 +181,14 @@ ${newData.amount.toLocaleString()} for ${format(
                   defaultValue={field.value}
                 >
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Transportation" />
+                    <SelectValue placeholder={randomCategory ?? 'Software'} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="software">Software</SelectItem>
-                    <SelectItem value="transportation">
-                      Transportation
-                    </SelectItem>
-                    <SelectItem value="hardware">Hardware</SelectItem>
+                    {expenseCategories.map((category) => (
+                      <SelectItem key={category.id} value={category.id}>
+                        {category.label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </FormItem>
