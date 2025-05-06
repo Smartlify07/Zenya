@@ -2,9 +2,16 @@ import type { Expense } from '@/types';
 import { Separator } from '../ui/separator';
 import { Badge } from '../ui/badge';
 import { format } from 'date-fns';
-import { CATEGORY_COLORS } from '@/lib/utils';
+import { CATEGORY_COLORS, expenseCategories } from '@/lib/utils';
+import { useMemo } from 'react';
 
 export const ExpenseCard = ({ expense }: { expense: Expense }) => {
+  const categoryLabel = useMemo(() => {
+    return (
+      expenseCategories.find((category) => category.id === expense.category)
+        ?.label ?? ''
+    );
+  }, [expenseCategories]);
   return (
     <div className="border-b py-4 px-2 flex justify-between">
       <div className="flex flex-col gap-2 w-8/12">
@@ -32,7 +39,7 @@ export const ExpenseCard = ({ expense }: { expense: Expense }) => {
         className={`self-end ${CATEGORY_COLORS[expense.category]}`}
         variant="outline"
       >
-        {expense.category}
+        {categoryLabel}
       </Badge>
     </div>
   );
