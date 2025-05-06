@@ -59,7 +59,12 @@ export function ExpenseForm({
   const { dispatch } = useFinance();
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    addExpense(data, dispatch);
+    const { date, ...rest } = data;
+    const newData = {
+      ...rest,
+      date: date.toISOString(),
+    };
+    addExpense(newData, dispatch);
     setShowForm(false);
   }
   useEffect(() => {

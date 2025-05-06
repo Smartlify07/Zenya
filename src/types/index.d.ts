@@ -2,11 +2,11 @@ export type Income = {
   amount: number;
   category: string;
   notes?: string;
-  date: Date;
+  date: string;
 };
 export type Expense = {
   amount: number;
   category: string;
   notes?: string;
-  date: Date;
+  date: string;
 };
