@@ -30,11 +30,11 @@ import {
 import { Textarea } from './ui/textarea';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { cn, expenseCategories } from '@/lib/utils';
-import { CalendarIcon } from 'lucide-react';
+import { CalendarIcon, Loader2 } from 'lucide-react';
 import { Calendar } from './ui/calendar';
 import { format } from 'date-fns';
 import { addExpense } from '@/lib/actions';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useFinance } from '@/hooks/useFinance';
 import { toast } from 'sonner';
 const FormSchema = z.object({
@@ -62,7 +62,7 @@ export function ExpenseForm({
     },
   });
   const { dispatch } = useFinance();
-
+  const [saving, setSaving] = useState(false);
   const randomCategory = useMemo(() => {
     return expenseCategories[
       Math.floor(Math.random() * expenseCategories.length - 1) ??
@@ -70,23 +70,29 @@ export function ExpenseForm({
     ].label;
   }, [expenseCategories]);
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    const { date, ...rest } = data;
-    const newData = {
-      ...rest,
-      id: v4(),
-      date: format(new Date(date), 'yyyy-MM-dd'),
-    };
-    addExpense(newData, dispatch);
-    setShowForm(false);
-    toast.success('Expense added successfully', {
-      description: `You have added a new expense of ₦
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    setSaving(true);
+    try {
+      const { date, ...rest } = data;
+      const newData = {
+        ...rest,
+        id: v4(),
+        date: new Date(date).toISOString(),
+      };
+      await addExpense(newData, dispatch);
+      setShowForm(false);
+      setSaving(false);
+      toast.success('Expense added successfully', {
+        description: `You have added a new expense of ₦
 ${newData.amount.toLocaleString()} for ${format(
-        new Date(newData.date),
-        'PPP'
-      )}`,
-      duration: 3000,
-    });
+          new Date(newData.date),
+          'PPP'
+        )}`,
+        duration: 3000,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
   useEffect(() => {
     if (form.formState.isSubmitSuccessful)
@@ -210,7 +216,8 @@ ${newData.amount.toLocaleString()} for ${format(
             >
               Cancel
             </DialogClose>
-            <Button type="submit" className="flex-1">
+            <Button disabled={saving} type="submit" className="flex-1">
+              {saving ? <Loader2 /> : null}
               Submit
             </Button>
           </div>

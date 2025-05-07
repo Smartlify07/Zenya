@@ -30,9 +30,11 @@ const initialState: FinanceState = {
 const FinanceProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(financeReducer, initialState);
   useEffect(() => {
-    fetchIncomes(dispatch);
-    fetchExpenses(dispatch);
-    getTotalBalance(dispatch);
+    (async () => {
+      await fetchIncomes(dispatch);
+      await fetchExpenses(dispatch);
+      await getTotalBalance(dispatch);
+    })();
   }, [dispatch]);
   return (
     <FinanceContext.Provider
