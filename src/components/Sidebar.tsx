@@ -14,7 +14,7 @@ const Sidebar = () => {
     },
   ];
   return (
-    <aside className="flex font-inter w-3/12 px-4 py-4 border flex-col gap-4">
+    <aside className="flex font-inter w-4/12 px-4 py-4 border flex-col gap-4">
       <header className="flex items-center gap-2">
         <Logo /> <h1 className="text-xl text-black">Zenya</h1>
       </header>

@@ -4,6 +4,7 @@ import { useFinance } from '@/hooks/useFinance';
 import { createFileRoute } from '@tanstack/react-router';
 import { CircleDollarSign, CreditCard, Wallet } from 'lucide-react';
 import { IncomesOverview } from '@/components/dashboard/incomes-overview';
+import { OverviewCharts } from '@/components/charts/overview-charts';
 
 export const Route = createFileRoute('/')({
   component: Dashboard,
@@ -12,7 +13,7 @@ export const Route = createFileRoute('/')({
 function Dashboard() {
   const { totalExpenses, totalIncome, totalBalance } = useFinance();
   return (
-    <main className="grid gap-4 px-4 py-4">
+    <main className="grid gap-8 px-4 py-4">
       <div className="grid gap-4 grid-cols-3">
         <StatCard
           Icon={Wallet}
@@ -36,9 +37,12 @@ function Dashboard() {
           percentage={30}
         />
       </div>
+      <section className="flex gap-4">
+        <OverviewCharts />
+        <ExpenseOverview />
+      </section>
 
       <section className="grid py-5 gap-6">
-        <ExpenseOverview />
         <IncomesOverview />
       </section>
     </main>

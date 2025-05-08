@@ -1,9 +1,10 @@
 import type { FinanceDispatch } from '@/context/types';
 import type { Expense, Income } from '@/types';
 import { supabase } from './supabase';
+import { toast } from 'sonner';
 
 export const fetchIncomes = async (dispatch: FinanceDispatch) => {
-  const { data } = await await supabase.from('incomes').select('*');
+  const { data } = await supabase.from('incomes').select('*');
   const incomes: Income[] = data as Income[];
   dispatch({ type: 'GET_INCOMES', payload: incomes });
   getTotalIncome(dispatch);
@@ -18,22 +19,32 @@ export const fetchExpenses = async (dispatch: FinanceDispatch) => {
   return expenses;
 };
 export const addIncome = async (income: Income, dispatch: FinanceDispatch) => {
-  await supabase.from('incomes').insert(income);
-  dispatch({
-    type: 'ADD_INCOME',
-    payload: income,
-  });
+  try {
+    await supabase.from('incomes').insert(income);
+    dispatch({
+      type: 'ADD_INCOME',
+      payload: income,
+    });
+  } catch (error) {
+    console.error('Error adding income:', error);
+    toast.error('Error adding income, please try again later.');
+  }
 };
 
 export const addExpense = async (
   expense: Expense,
   dispatch: FinanceDispatch
 ) => {
-  await supabase.from('incomes').insert(expense);
-  dispatch({
-    type: 'ADD_EXPENSE',
-    payload: expense,
-  });
+  try {
+    await supabase.from('expenses').insert(expense);
+    dispatch({
+      type: 'ADD_EXPENSE',
+      payload: expense,
+    });
+  } catch (error) {
+    console.error('Error adding expense:', error);
+    toast.error('Error adding expense, please try again later.');
+  }
 };
 
 export const getTotalExpenses = (dispatch: FinanceDispatch) => {
