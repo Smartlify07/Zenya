@@ -14,7 +14,7 @@ function Dashboard() {
   const { totalExpenses, totalIncome, totalBalance } = useFinance();
   return (
     <main className="grid gap-8 px-4 py-4">
-      <div className="grid gap-4 grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-3">
         <StatCard
           Icon={Wallet}
           type="balance"
@@ -37,7 +37,7 @@ function Dashboard() {
           percentage={30}
         />
       </div>
-      <section className="flex gap-4">
+      <section className="flex flex-col md:flex-row gap-4">
         <OverviewCharts />
         <ExpenseOverview />
       </section>
