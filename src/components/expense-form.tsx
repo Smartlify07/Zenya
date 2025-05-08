@@ -72,27 +72,25 @@ export function ExpenseForm({
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     setSaving(true);
-    try {
-      const { date, ...rest } = data;
-      const newData = {
-        ...rest,
-        id: v4(),
-        date: new Date(date).toISOString(),
-      };
-      await addExpense(newData, dispatch);
-      setShowForm(false);
-      setSaving(false);
-      toast.success('Expense added successfully', {
-        description: `You have added a new expense of ₦
+    const { date, ...rest } = data;
+
+    const newData = {
+      ...rest,
+      id: v4(),
+      date: new Date(date).toISOString(),
+    };
+
+    await addExpense(newData, dispatch);
+    setShowForm(false);
+    setSaving(false);
+    toast.success('Expense added successfully', {
+      description: `You have added a new expense of ₦
 ${newData.amount.toLocaleString()} for ${format(
-          new Date(newData.date),
-          'PPP'
-        )}`,
-        duration: 3000,
-      });
-    } catch (error) {
-      console.error(error);
-    }
+        new Date(newData.date),
+        'PPP'
+      )}`,
+      duration: 3000,
+    });
   }
   useEffect(() => {
     if (form.formState.isSubmitSuccessful)

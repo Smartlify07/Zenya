@@ -10,7 +10,7 @@ export const Route = createRootRoute({
     <main className="flex min-h-screen  gap-0">
       <FinanceProvider>
         <Sidebar />
-        <section className="flex-1">
+        <section className="w-11/12">
           <DashboardTopNav />
           <Outlet />
         </section>
