@@ -18,17 +18,17 @@ import { Link } from '@tanstack/react-router';
 const items = [
   {
     title: 'Dashboard',
-    url: '/',
+    url: '/dashboard',
     icon: LayoutDashboard,
   },
   {
     title: 'Expenses',
-    url: '/expenses',
+    url: '/dashboard/expenses',
     icon: Wallet,
   },
   {
     title: 'Income',
-    url: '/income',
+    url: '/dashboard/incomes',
     icon: PiggyBank,
   },
 ];
