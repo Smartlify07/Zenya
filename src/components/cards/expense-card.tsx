@@ -12,8 +12,9 @@ export const ExpenseCard = ({ expense }: { expense: Expense }) => {
         ?.label ?? ''
     );
   }, [expenseCategories]);
+  const categoryColor = CATEGORY_COLORS?.[expense.category];
   return (
-    <div className="border-b py-4 px-2 flex justify-between">
+    <div className="border-b py-4 overflow-hidden md:px-2 flex flex-col md:flex-row md:justify-between">
       <div className="flex flex-col gap-2 w-8/12">
         <div className="flex flex-col gap-1">
           <h1 className="text-base font-medium first-letter:capitalize">
@@ -37,12 +38,9 @@ export const ExpenseCard = ({ expense }: { expense: Expense }) => {
           {expense.notes}
         </div>
       </div>
-      <Badge
-        className={`self-end ${CATEGORY_COLORS[expense.category]}`}
-        variant="outline"
-      >
-        {categoryLabel}
-      </Badge>
+      {categoryColor && (
+        <Badge className={`self-end ${categoryColor}`}>{categoryLabel}</Badge>
+      )}
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import { AppSidebar } from '@/components/app-sidebar';
 import { DashboardTopNav } from '@/components/dashboard/top-nav';
-import { SidebarProvider } from '@/components/ui/sidebar';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import FinanceProvider from '@/context/FinanceProvider';
 import { createFileRoute, Outlet } from '@tanstack/react-router';
 
@@ -13,11 +13,15 @@ function RouteComponent() {
     <main className="flex min-h-screen gap-0">
       <FinanceProvider>
         <SidebarProvider className="flex">
-          <AppSidebar />
-          <section className="md:flex-1 relative">
-            <DashboardTopNav />
-            <Outlet />
-          </section>
+          <AppSidebar variant="sidebar" />
+          <SidebarInset>
+            <div className="@container/main flex flex-1 flex-col gap-2">
+              <div className="flex flex-col gap-4 md:gap-6">
+                <DashboardTopNav />
+                <Outlet />
+              </div>
+            </div>
+          </SidebarInset>
         </SidebarProvider>
       </FinanceProvider>
     </main>

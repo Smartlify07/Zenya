@@ -13,7 +13,7 @@ export const Route = createFileRoute('/dashboard/')({
 function Dashboard() {
   const { totalExpenses, totalIncome, totalBalance } = useFinance();
   return (
-    <main className="flex flex-col gap-8 px-8 md:px-4 py-4">
+    <main className="flex flex-col gap-8 px-4 py-4 md:px-4">
       <div className="grid gap-4 md:grid-cols-3">
         <StatCard
           Icon={Wallet}
@@ -41,10 +41,7 @@ function Dashboard() {
         <OverviewCharts />
         <ExpenseOverview />
       </section>
-
-      <section className="grid py-5 gap-6">
-        <IncomesOverview />
-      </section>
+      <IncomesOverview />
     </main>
   );
 }

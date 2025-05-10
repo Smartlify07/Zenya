@@ -16,7 +16,7 @@ function ExpensesPage() {
       </header>
       <div className="flex flex-col gap-4">
         {expenses?.map((expense) => (
-          <ExpenseCard expense={expense} />
+          <ExpenseCard key={expense.id} expense={expense} />
         ))}
       </div>
     </main>
