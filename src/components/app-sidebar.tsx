@@ -1,4 +1,9 @@
-import { LayoutDashboard, PiggyBank, Wallet } from 'lucide-react';
+import {
+  LayoutDashboard,
+  PiggyBank,
+  PlusCircleIcon,
+  Wallet,
+} from 'lucide-react';
 
 import {
   Sidebar,
@@ -13,6 +18,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Logo } from './logo';
 import { Link } from '@tanstack/react-router';
+import { QuickActions } from './quick-actions';
 
 // Menu items.
 const items = [
@@ -33,16 +39,23 @@ const items = [
   },
 ];
 
-export function AppSidebar() {
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar className="font-inter border">
+    <Sidebar collapsible="icon" className="font-inter border" {...props}>
       <SidebarHeader>
-        <div className="flex w-full py-2 font-semibold items-center gap-4">
-          <Logo /> Zenya
-        </div>
+        <SidebarMenu>
+          <SidebarMenuItem className="flex w-full py-2 font-semibold items-center gap-4">
+            <Logo /> Zenya
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
+        <SidebarGroup className="flex flex-col gap-2">
+          <SidebarGroupContent>
+            <SidebarMenuItem>
+              <QuickActions />
+            </SidebarMenuItem>
+          </SidebarGroupContent>
           <SidebarGroupContent>
             <SidebarGroupLabel>Menu</SidebarGroupLabel>
             <SidebarMenu className="gap-2">

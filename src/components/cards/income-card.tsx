@@ -12,19 +12,20 @@ export const IncomeCard = ({ income }: { income: Income }) => {
         ?.label ?? ''
     );
   }, [incomeCategories]);
+  const categoryColor = CATEGORY_COLORS?.[income.category];
   return (
-    <div className="border-b py-4 px-2 flex justify-between">
+    <div className="border-b py-4 overflow-hidden md:px-2 flex flex-col md:flex-row md:justify-between">
       <div className="flex flex-col gap-2 w-8/12">
         <div className="flex flex-col gap-1">
           <h1 className="text-base font-medium first-letter:capitalize">
-            {income.source}
+            {income?.source}
           </h1>
-          <div className="flex gap-2 h-5">
+          <div className="flex gap-2 h-5 overflow-hidden">
             <p className="text-sm text-neutral-800">
               ₦{income.amount.toLocaleString()}
             </p>
             <Separator orientation="vertical" />
-            <p className="text-sm text-neutral-800 truncate">
+            <p className="text-sm text-neutral-800 overflow-hidden truncate">
               Date of income: {format(new Date(income.date), 'PPP')}
             </p>
           </div>
@@ -37,12 +38,11 @@ export const IncomeCard = ({ income }: { income: Income }) => {
           {income.notes}
         </div>
       </div>
-      <Badge
-        className={`self-end ${CATEGORY_COLORS[income.category]}`}
-        variant="outline"
-      >
-        {categoryLabel}
-      </Badge>
+      {categoryColor && (
+        <Badge className={`self-end ${CATEGORY_COLORS[income.category]}`}>
+          {categoryLabel}
+        </Badge>
+      )}
     </div>
   );
 };

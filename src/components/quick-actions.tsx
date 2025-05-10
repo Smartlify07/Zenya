@@ -1,4 +1,4 @@
-import { CommandIcon } from 'lucide-react';
+import { CommandIcon, PlusCircleIcon } from 'lucide-react';
 import { buttonVariants } from './ui/button';
 import { useRef, useState } from 'react';
 import { Dialog, DialogContent, DialogTrigger } from './ui/dialog';
@@ -6,6 +6,7 @@ import { IncomeForm } from './income-form';
 import { cn } from '@/lib/utils';
 import { ExpenseForm } from './expense-form';
 import { useClickOutside } from '@/hooks/useClickOutside';
+import { SidebarMenuButton } from './ui/sidebar';
 export const QuickActions = () => {
   const [selectedAction, setSelectedAction] = useState<
     'income' | 'expense' | null
@@ -16,22 +17,21 @@ export const QuickActions = () => {
   useClickOutside(actionsRef, () => setShowActions(false));
   return (
     <div className="relative">
-      <div
+      <SidebarMenuButton
         onClick={() => {
           setShowActions((prev) => !prev);
         }}
-        className="flex items-center rounded-lg justify-between w-full text-base font-medium px-2 py-2"
+        tooltip="Quick Create"
+        className="min-w-8 bg-primary text-primary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground"
       >
-        Quick Actions
-        <div className="rounded-md flex items-center gap-2 px-4 py-2 bg-neutral-100 text-black font-medium">
-          <CommandIcon size={16} /> K
-        </div>
-      </div>
+        <PlusCircleIcon />
+        <span>Quick Create</span>
+      </SidebarMenuButton>
       <Dialog>
         {showActions && (
           <div
             ref={actionsRef}
-            className="bg-white flex flex-col absolute w-full gap-1 rounded-lg shadow-lg border p-2"
+            className="bg-white -right-10 z-20  flex flex-col absolute w-full gap-1 rounded-lg shadow-lg border p-2"
           >
             <DialogTrigger
               onClick={() => {
