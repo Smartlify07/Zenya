@@ -43,13 +43,13 @@ export function OverviewCharts() {
   });
 
   return (
-    <Card className="shadow-none w-full md:w-6/12">
+    <Card className="shadow-none  md:w-6/12">
       <CardHeader>
         <CardTitle>Expense - Income chart</CardTitle>
         <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer className="h-[300px] w-full" config={chartConfig}>
+        <ChartContainer className="min-h-[300px]" config={chartConfig}>
           <BarChart accessibilityLayer data={Object.values(merged)}>
             <CartesianGrid vertical={false} />
             <XAxis
