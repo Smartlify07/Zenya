@@ -1,4 +1,4 @@
-import { CommandIcon, PlusCircleIcon } from 'lucide-react';
+import { PlusCircleIcon } from 'lucide-react';
 import { buttonVariants } from './ui/button';
 import { useRef, useState } from 'react';
 import { Dialog, DialogContent, DialogTrigger } from './ui/dialog';

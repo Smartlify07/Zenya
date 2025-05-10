@@ -1,9 +1,4 @@
-import {
-  LayoutDashboard,
-  PiggyBank,
-  PlusCircleIcon,
-  Wallet,
-} from 'lucide-react';
+import { LayoutDashboard, PiggyBank, Wallet } from 'lucide-react';
 
 import {
   Sidebar,
