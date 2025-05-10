@@ -14,7 +14,7 @@ function RouteComponent() {
       <FinanceProvider>
         <SidebarProvider className="flex">
           <AppSidebar />
-          <section className="flex-1 relative">
+          <section className="md:flex-1 relative">
             <DashboardTopNav />
             <Outlet />
           </section>

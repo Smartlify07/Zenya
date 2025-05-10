@@ -5,7 +5,7 @@ export const ExpenseOverview = () => {
   const { expenses } = useFinance();
 
   return (
-    <section className="font-inter rounded-lg w-full  flex flex-col gap-1 py-2">
+    <section className="font-inter rounded-lg md:w-full  flex flex-col gap-1 py-2">
       <header>
         <h1 className="font-semibold text-lg">Expenses Overview</h1>
       </header>
