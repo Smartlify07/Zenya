@@ -8,9 +8,14 @@ type APILayer<T> = {
   table: string;
   column: '*' | keyof T;
   data?: T;
-  checkEquality?: boolean;
-  equalColumn?: keyof T;
-  equalData?: T[keyof T];
+  scopedToUser: boolean;
+  filters?: Partial<Record<keyof T, T[keyof T]>>;
+};
+
+type APIResponse<T = any> = {
+  data: T | null;
+  error: Error | null;
+  status: string | null;
 };
 
 export const apiLayer = async <T>(
@@ -18,83 +23,79 @@ export const apiLayer = async <T>(
   table: APILayer<T>['table'],
   column: APILayer<T>['column'],
   data?: APILayer<T>['data'],
-  checkEquality?: APILayer<T>['checkEquality'],
-  equalColumn?: APILayer<T>['equalColumn'],
-  equalData?: APILayer<T>['equalData']
+  filters: any = {},
+  scopedToUser: APILayer<T>['scopedToUser'] = false
 ) => {
   const methods: API_METHODS[] = ['PATCH', 'POST', 'GET', 'DELETE', 'PUT'];
   let response: any;
   const userSession = await getSession();
+  const user_id = userSession?.data?.session?.user?.id;
   if (!methods.includes(method)) {
     throw new Error('Method not allowed');
   }
   if (!userSession.data.session) {
     throw new Error('Session expired, redirecting...');
   }
+  if (scopedToUser && !user_id) {
+    return { data: null, error: new Error('Not authenticated'), status: null };
+  }
+  const handleResponse = (response: APIResponse<T>) => ({
+    data: response.data,
+    error: response.error,
+    status: response.status,
+  });
+
+  const appliedFilters = user_id
+    ? {
+        ...filters,
+        user_id,
+      }
+    : filters;
 
   switch (method) {
     case 'GET':
-      if (!checkEquality) {
-        response = await supabase.from(table).select(column as string);
-        return {
-          data: response.data,
-          error: response.error,
-          status: response.status,
-        };
-      } else {
-        response = await supabase
-          .from(table)
-          .select(column as string)
-          .eq(equalColumn! as string, equalData);
-        return {
-          data: response.data,
-          error: response.error,
-          status: response.status,
-        };
+      let query = supabase.from(table).select(column as string);
+      for (const key in appliedFilters) {
+        query = query.eq(key as string, appliedFilters[key]!);
       }
 
-    case 'POST':
-      response = await supabase.from(table).insert(data);
-      return {
-        data: response.data,
-        error: response.error,
-        status: response.status,
-      };
+      response = await query;
+      return handleResponse(response);
 
-    case 'DELETE':
+    case 'POST':
       response = await supabase
         .from(table)
-        .delete()
-        .eq(column as string, equalData);
-      return {
-        data: response.data,
-        error: response.error,
-        status: response.status,
-      };
+        .insert(scopedToUser ? { ...data, user_id: user_id } : data);
+      return handleResponse(response);
 
+    case 'DELETE':
+      let deleteQuery = supabase.from(table).delete();
+      for (const key in appliedFilters) {
+        deleteQuery = deleteQuery.eq(key as string, appliedFilters[key]!);
+      }
+      const response = await deleteQuery;
+      return handleResponse(response);
     default:
-      return {
+      return handleResponse({
         data: null,
         error: new Error('Method not specified'),
         status: null,
-      };
+      });
   }
 };
 
 export const fetchData = async <T>(
   table: APILayer<T>['table'],
+  scopedToUser: APILayer<T>['scopedToUser'],
   column: APILayer<T>['column'],
-  checkEquality?: APILayer<T>['checkEquality'],
-  equalColumn?: APILayer<T>['equalColumn'],
-  equalData?: APILayer<T>['equalData']
-) => {
+  filters: {}
+): Promise<APIResponse<T>> => {
   return await apiLayer<T>(
     'GET',
     table,
+    scopedToUser,
     column,
     undefined,
-    checkEquality,
-    equalColumn,
-    equalData
+    filters
   );
 };
