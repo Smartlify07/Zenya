@@ -2,7 +2,6 @@ import type { FinanceDispatch } from '@/context/types';
 import type { Expense, Income } from '@/types';
 import { supabase } from './supabase';
 import { toast } from 'sonner';
-import { User } from 'lucide-react';
 
 export const fetchIncomes = async (
   dispatch: FinanceDispatch,
