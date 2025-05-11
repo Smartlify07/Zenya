@@ -3,6 +3,7 @@ import React, { createContext, useEffect, useReducer } from 'react';
 import { financeReducer } from './reducers';
 import type { ActionTypes, FinanceState } from './types';
 import { fetchExpenses, fetchIncomes, getTotalBalance } from '@/lib/actions';
+import { useAuth } from '@/hooks/use-auth';
 
 type FinanceContextType = {
   incomes: Income[] | null;
@@ -29,13 +30,17 @@ const initialState: FinanceState = {
 
 const FinanceProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(financeReducer, initialState);
+  const user = useAuth();
   useEffect(() => {
-    (async () => {
-      await fetchIncomes(dispatch);
-      await fetchExpenses(dispatch);
+    const fetchData = async () => {
+      await fetchIncomes(dispatch, user?.id!);
+      await fetchExpenses(dispatch, user?.id!);
       await getTotalBalance(dispatch);
-    })();
-  }, [dispatch]);
+    };
+    if (user) {
+      fetchData();
+    }
+  }, [dispatch, user]);
   return (
     <FinanceContext.Provider
       value={{

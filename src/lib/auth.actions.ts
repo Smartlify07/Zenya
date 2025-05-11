@@ -50,3 +50,24 @@ export const login = async (email: string, password: string) => {
     throw error;
   }
 };
+
+export const getSession = async () => {
+  try {
+    const session = await supabase.auth.getSession();
+    return session;
+  } catch (error) {
+    throw Error('Session not found');
+  }
+};
+
+export const getUser = async () => {
+  try {
+    const user = await supabase.auth.getUser();
+    if (user?.error) {
+      throw new Error('An error occurred trying to get the current user');
+    }
+    return user;
+  } catch (error) {
+    console.error(error);
+  }
+};
