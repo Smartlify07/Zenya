@@ -1,14 +1,7 @@
-import type { PostgrestResponse } from '@supabase/supabase-js';
 import { supabase } from './supabase';
 import { getSession } from './auth.actions';
 
 type API_METHODS = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
-
-type API_RESPONSE<T> = {
-  data: T | null;
-  error: Error | null;
-  status: string;
-};
 
 type APILayer<T> = {
   method: API_METHODS;
