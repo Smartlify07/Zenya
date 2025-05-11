@@ -2,15 +2,14 @@ import type { FinanceDispatch } from '@/context/types';
 import type { Expense, Income } from '@/types';
 import { supabase } from './supabase';
 import { toast } from 'sonner';
+import { fetchData } from './api';
 
 export const fetchIncomes = async (
   dispatch: FinanceDispatch,
   user_id: string | null
 ) => {
-  const { data } = await supabase
-    .from('incomes')
-    .select(`*`)
-    .eq('user_id', user_id);
+  const { data } = await fetchData('incomes', '*', true, 'user_id', user_id);
+  console.log(data);
   const incomes: Income[] = data as Income[];
   dispatch({ type: 'GET_INCOMES', payload: incomes });
   getTotalIncome(dispatch);
