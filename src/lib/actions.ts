@@ -2,25 +2,47 @@ import type { FinanceDispatch } from '@/context/types';
 import type { Expense, Income } from '@/types';
 import { supabase } from './supabase';
 import { toast } from 'sonner';
+import { User } from 'lucide-react';
 
-export const fetchIncomes = async (dispatch: FinanceDispatch) => {
-  const { data } = await supabase.from('incomes').select('*');
+export const fetchIncomes = async (
+  dispatch: FinanceDispatch,
+  user_id: string | null
+) => {
+  const { data } = await supabase
+    .from('incomes')
+    .select(`*`)
+    .eq('user_id', user_id);
   const incomes: Income[] = data as Income[];
   dispatch({ type: 'GET_INCOMES', payload: incomes });
   getTotalIncome(dispatch);
   return incomes;
 };
 
-export const fetchExpenses = async (dispatch: FinanceDispatch) => {
-  const { data } = await supabase.from('expenses').select('*');
+export const fetchExpenses = async (
+  dispatch: FinanceDispatch,
+  user_id: string
+) => {
+  const { data } = await supabase
+    .from('expenses')
+    .select(`*`)
+    .eq('user_id', user_id);
   const expenses: Expense[] = data as Expense[];
   dispatch({ type: 'GET_EXPENSES', payload: expenses });
   getTotalExpenses(dispatch);
   return expenses;
 };
-export const addIncome = async (income: Income, dispatch: FinanceDispatch) => {
+export const addIncome = async (
+  income: Income,
+  user_id: string,
+  dispatch: FinanceDispatch
+) => {
   try {
-    await supabase.from('incomes').insert(income);
+    await supabase.from('incomes').insert([
+      {
+        ...income,
+        user_id: user_id,
+      },
+    ]);
     dispatch({
       type: 'ADD_INCOME',
       payload: income,
@@ -33,10 +55,11 @@ export const addIncome = async (income: Income, dispatch: FinanceDispatch) => {
 
 export const addExpense = async (
   expense: Expense,
+  user_id: string,
   dispatch: FinanceDispatch
 ) => {
   try {
-    await supabase.from('expenses').insert(expense);
+    await supabase.from('expenses').insert({ ...expense, user_id: user_id });
     dispatch({
       type: 'ADD_EXPENSE',
       payload: expense,
