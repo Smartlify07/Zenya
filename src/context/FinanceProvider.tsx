@@ -34,7 +34,7 @@ const FinanceProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const fetchData = async () => {
       await fetchIncomes(dispatch);
-      await fetchExpenses(dispatch, user?.id!);
+      await fetchExpenses(dispatch);
       await getTotalBalance(dispatch);
     };
     if (user) {
