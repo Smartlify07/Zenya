@@ -1,8 +1,8 @@
-import { ExpenseCard } from '@/components/cards/expense-card';
-import { useFinance } from '@/hooks/useFinance';
 import { createFileRoute } from '@tanstack/react-router';
+import { IncomeCard } from '@/components/cards/income-card';
+import { useFinance } from '@/hooks/useFinance';
 
-export const Route = createFileRoute('/dashboard/expenses')({
+export const Route = createFileRoute('/_auth/expenses')({
   component: ExpensesPage,
 });
 
@@ -15,8 +15,8 @@ function ExpensesPage() {
         <p className="text-sm text-neutral-500">Track your expenses here.</p>
       </header>
       <div className="flex flex-col gap-4">
-        {expenses?.map((expense) => (
-          <ExpenseCard key={expense.id} expense={expense} />
+        {expenses?.map((income) => (
+          <IncomeCard key={income.id} income={income} />
         ))}
       </div>
     </main>

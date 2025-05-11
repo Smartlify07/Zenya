@@ -35,6 +35,7 @@ function Login() {
   const handleSubmit = form.handleSubmit(async (data) => {
     await login(data.email, data.password);
   });
+
   return (
     <main className="flex items-center justify-center font-inter min-h-screen">
       <div className="flex flex-col space-y-10 max-w-sm min-w-sm  items-center justify-center">

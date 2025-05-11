@@ -1,12 +1,12 @@
+import { createFileRoute } from '@tanstack/react-router';
 import { OverviewCharts } from '@/components/charts/overview-charts';
 import { ExpenseOverview } from '@/components/dashboard/expense-overview';
 import { IncomesOverview } from '@/components/dashboard/incomes-overview';
 import { StatCard } from '@/components/dashboard/stats-card';
 import { useFinance } from '@/hooks/useFinance';
-import { createFileRoute } from '@tanstack/react-router';
 import { CircleDollarSign, CreditCard, Wallet } from 'lucide-react';
 
-export const Route = createFileRoute('/dashboard/')({
+export const Route = createFileRoute('/_auth/dashboard')({
   component: Dashboard,
 });
 

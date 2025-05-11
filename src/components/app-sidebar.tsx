@@ -24,12 +24,12 @@ const items = [
   },
   {
     title: 'Expenses',
-    url: '/dashboard/expenses',
+    url: '/expenses',
     icon: Wallet,
   },
   {
     title: 'Income',
-    url: '/dashboard/incomes',
+    url: '/incomes',
     icon: PiggyBank,
   },
 ];

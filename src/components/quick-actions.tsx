@@ -2,9 +2,9 @@ import { PlusCircleIcon } from 'lucide-react';
 import { buttonVariants } from './ui/button';
 import { useRef, useState } from 'react';
 import { Dialog, DialogContent, DialogTrigger } from './ui/dialog';
-import { IncomeForm } from './income-form';
+import { IncomeForm } from './forms/income-form';
 import { cn } from '@/lib/utils';
-import { ExpenseForm } from './expense-form';
+import { ExpenseForm } from './forms/expense-form';
 import { useClickOutside } from '@/hooks/useClickOutside';
 import { SidebarMenuButton } from './ui/sidebar';
 export const QuickActions = () => {

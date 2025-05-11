@@ -19,19 +19,19 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from './ui/dialog';
+} from '../ui/dialog';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select';
-import { Textarea } from './ui/textarea';
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
+} from '../ui/select';
+import { Textarea } from '../ui/textarea';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { cn, incomeCategories } from '@/lib/utils';
 import { CalendarIcon, Loader2 } from 'lucide-react';
-import { Calendar } from './ui/calendar';
+import { Calendar } from '../ui/calendar';
 import { format } from 'date-fns';
 import { addIncome } from '@/lib/actions';
 import { useEffect, useMemo, useState } from 'react';
