@@ -1,9 +1,12 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/')({
-  component: Index,
-});
+  component: RouteComponent,
+  beforeLoad: async () => {
+    
+  }
+})
 
-function Index() {
-  return <></>;
+function RouteComponent() {
+  return <div>Hello "/"!</div>
 }

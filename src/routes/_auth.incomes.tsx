@@ -2,11 +2,11 @@ import { IncomeCard } from '@/components/cards/income-card';
 import { useFinance } from '@/hooks/useFinance';
 import { createFileRoute } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/dashboard/incomes')({
-  component: ExpensesPage,
+export const Route = createFileRoute('/_auth/incomes')({
+  component: IncomesPage,
 });
 
-function ExpensesPage() {
+function IncomesPage() {
   const { incomes } = useFinance();
   return (
     <main className="font-inter flex flex-col gap-4 py-4 px-8">
