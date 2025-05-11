@@ -2,43 +2,40 @@ import type { FinanceDispatch } from '@/context/types';
 import type { Expense, Income } from '@/types';
 import { supabase } from './supabase';
 import { toast } from 'sonner';
-import { fetchData } from './api';
+import { getUser } from './auth.actions';
 
-export const fetchIncomes = async (
-  dispatch: FinanceDispatch,
-  user_id: string | null
-) => {
-  const { data } = await fetchData('incomes', '*', true, 'user_id', user_id);
-  console.log(data);
-  const incomes: Income[] = data as Income[];
+export const fetchIncomes = async (dispatch: FinanceDispatch) => {
+  const user = await getUser();
+  const { data } = await supabase
+    .from('incomes')
+    .select('*')
+    .eq('user_id', user?.data?.user?.id);
+  const incomes: Income[] = data! ?? [];
   dispatch({ type: 'GET_INCOMES', payload: incomes });
   getTotalIncome(dispatch);
   return incomes;
 };
 
-export const fetchExpenses = async (
-  dispatch: FinanceDispatch,
-  user_id: string
-) => {
+export const fetchExpenses = async (dispatch: FinanceDispatch) => {
+  const user = await getUser();
+
   const { data } = await supabase
     .from('expenses')
     .select(`*`)
-    .eq('user_id', user_id);
+    .eq('user_id', user?.data?.user?.id);
   const expenses: Expense[] = data as Expense[];
   dispatch({ type: 'GET_EXPENSES', payload: expenses });
   getTotalExpenses(dispatch);
   return expenses;
 };
-export const addIncome = async (
-  income: Income,
-  user_id: string,
-  dispatch: FinanceDispatch
-) => {
+export const addIncome = async (income: Income, dispatch: FinanceDispatch) => {
   try {
+    const user = await getUser();
+
     await supabase.from('incomes').insert([
       {
         ...income,
-        user_id: user_id,
+        user_id: user?.data?.user?.id,
       },
     ]);
     dispatch({
@@ -53,11 +50,14 @@ export const addIncome = async (
 
 export const addExpense = async (
   expense: Expense,
-  user_id: string,
   dispatch: FinanceDispatch
 ) => {
+  const user = await getUser();
+
   try {
-    await supabase.from('expenses').insert({ ...expense, user_id: user_id });
+    await supabase
+      .from('expenses')
+      .insert({ ...expense, user_id: user?.data?.user?.id });
     dispatch({
       type: 'ADD_EXPENSE',
       payload: expense,
