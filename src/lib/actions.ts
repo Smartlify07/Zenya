@@ -1,7 +1,6 @@
 import type { FinanceDispatch } from '@/context/types';
 import type { Expense, Income } from '@/types';
 import { supabase } from './supabase';
-import { toast } from 'sonner';
 
 export const fetchIncomes = async (
   dispatch: FinanceDispatch,
