@@ -10,9 +10,12 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
+import { useAuth } from '@/hooks/use-auth';
 import { googleSignIn, login } from '@/lib/auth.actions';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { Loader2 } from 'lucide-react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -32,8 +35,18 @@ function Login() {
       password: '',
     },
   });
+  const { updateUser } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const handleSubmit = form.handleSubmit(async (data) => {
-    await login(data.email, data.password);
+    setLoading(true);
+    const res = await login(data.email, data.password);
+    navigate({ to: '/dashboard' });
+    setLoading(false);
+    navigate({
+      to: '/dashboard',
+    });
+    updateUser(res.user);
   });
 
   return (
@@ -134,6 +147,7 @@ function Login() {
                 type="submit"
                 className="rounded-sm flex items-center w-full justify-center"
               >
+                {loading && <Loader2 />}
                 Continue with Email
               </Button>
             </form>
