@@ -6,14 +6,17 @@ export const signup = async (email: string, password: string) => {
     const user = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        emailRedirectTo: 'localhost:3000',
+      },
     });
     if (user.error) {
+      toast.error(user.error.message);
       throw new Error(user.error.message);
     }
     return user.data;
   } catch (error) {
     console.error('Error signing up:', error);
-    toast.error('Error signing up, please try again later.');
     throw error;
   }
 };
@@ -64,9 +67,19 @@ export const getUser = async () => {
   try {
     const user = await supabase.auth.getUser();
     if (user?.error) {
+      console.log(user?.error);
       throw new Error('An error occurred trying to get the current user');
     }
     return user;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const isAuthenticated = async () => {
+  try {
+    const response = await getUser();
+    response?.data.user?.id ? true : false;
   } catch (error) {
     console.error(error);
   }

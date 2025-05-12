@@ -1,27 +1,24 @@
-import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
+import {
+  createFileRoute,
+  Navigate,
+  Outlet,
+  redirect,
+} from '@tanstack/react-router';
 import FinanceProvider from '@/context/FinanceProvider';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/app-sidebar';
 import { DashboardTopNav } from '@/components/dashboard/top-nav';
+import { useAuth } from '@/hooks/use-auth';
+
 export const Route = createFileRoute('/_auth')({
-  beforeLoad: async ({ context, location }) => {
-    if (!context.auth.loading) {
-      if (!context.auth.isAuthenticated)
-        throw redirect({
-          to: '/login',
-          search: {
-            // Use the current location to power a redirect after login
-            // (Do not use `router.state.resolvedLocation` as it can
-            // potentially lag behind the actual current location)
-            redirect: location.href,
-          },
-        });
-    }
-  },
   component: AppLayout,
 });
 
 export function AppLayout() {
+  const { user, loading } = useAuth();
+  if (!loading && !user?.id) {
+    return <Navigate to="/login" />;
+  }
   return (
     <FinanceProvider>
       <SidebarProvider className="flex">
