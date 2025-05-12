@@ -12,6 +12,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import {
@@ -40,11 +41,10 @@ import { toast } from 'sonner';
 import { useAuth } from '@/hooks/use-auth';
 const FormSchema = z.object({
   payee: z.string().optional(),
-
   date: z.date(),
   notes: z.string().optional(),
-  amount: z.coerce.number(),
-  category: z.string(),
+  amount: z.coerce.number().min(1, "Expense amount can't be less than one"),
+  category: z.string().min(1, 'Category cannot be empty'),
 });
 
 export function ExpenseForm({
@@ -131,6 +131,7 @@ export function ExpenseForm({
               <FormItem>
                 <FormLabel>Amount</FormLabel>
                 <Input type="number" {...field} />
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -141,6 +142,7 @@ export function ExpenseForm({
               <FormItem>
                 <FormLabel>Payee</FormLabel>
                 <Input type="text" {...field} />
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -181,6 +183,7 @@ export function ExpenseForm({
                     />
                   </PopoverContent>
                 </Popover>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -206,6 +209,7 @@ export function ExpenseForm({
                     ))}
                   </SelectContent>
                 </Select>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -216,6 +220,7 @@ export function ExpenseForm({
               <FormItem>
                 <FormLabel>Notes</FormLabel>
                 <Textarea {...field} />
+                <FormMessage />
               </FormItem>
             )}
           />
