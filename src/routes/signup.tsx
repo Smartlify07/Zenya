@@ -14,6 +14,8 @@ import { useAuth } from '@/hooks/use-auth';
 import { googleSignIn, login, signup } from '@/lib/auth.actions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { Loader2 } from 'lucide-react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -33,19 +35,23 @@ function Signup() {
       password: '',
     },
   });
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
   const { updateUser } = useAuth();
   const handleSubmit = form.handleSubmit(async (data) => {
+    setLoading(true);
     const res = await signup(data.email, data.password);
     await login(data.email, data.password);
     navigate({
       to: '/dashboard',
     });
+    setLoading(false);
     updateUser(res.user);
   });
   return (
-    <main className="flex items-center justify-center font-inter min-h-screen">
-      <div className="flex flex-col space-y-10 max-w-sm min-w-sm  items-center justify-center">
+    <main className="flex items-center justify-center px-4 font-inter min-h-screen">
+      <div className="flex flex-col space-y-10 w-full md:max-w-sm md:min-w-sm items-center justify-center">
         <header className="flex flex-col items-center gap-1">
           <h1 className="text-neutral-800 flex items-center gap-3 text-xl text-center font-semibold">
             Welcome to Zenya <Logo />
@@ -58,11 +64,14 @@ function Signup() {
         <div className="flex flex-col w-full gap-4">
           <Button
             onClick={async () => {
+              setLoading(true);
               await googleSignIn();
+              setLoading(false);
             }}
             variant={'outline'}
             className="rounded-sm flex items-center w-full justify-center"
           >
+            {loading && <Loader2 className="text-black" fill="#000" />}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               x="0px"
@@ -141,6 +150,7 @@ function Signup() {
                 type="submit"
                 className="rounded-sm flex items-center w-full justify-center"
               >
+                {loading && <Loader2 />}
                 Continue with Email
               </Button>
             </form>
