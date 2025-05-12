@@ -70,7 +70,7 @@ export function IncomeForm({
     return incomeCategories[
       Math.floor(Math.random() * incomeCategories.length - 1) ??
         'Client Projects'
-    ].label;
+    ]?.label;
   }, [incomeCategories]);
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {

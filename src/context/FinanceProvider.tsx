@@ -12,6 +12,8 @@ type FinanceContextType = {
   totalExpenses: number;
   totalIncome: number;
   totalBalance: number;
+
+  loading: boolean;
 };
 
 export const FinanceContext = createContext<FinanceContextType | undefined>(
@@ -47,6 +49,7 @@ const FinanceProvider = ({ children }: { children: React.ReactNode }) => {
         totalExpenses: state.totalExpenses,
         totalIncome: state.totalIncome,
         totalBalance: state.totalBalance,
+        loading: state.loading,
         dispatch: dispatch,
       }}
     >

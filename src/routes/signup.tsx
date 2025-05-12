@@ -10,9 +10,10 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { googleSignIn, signup } from '@/lib/auth.actions';
+import { useAuth } from '@/hooks/use-auth';
+import { googleSignIn, login, signup } from '@/lib/auth.actions';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -32,8 +33,15 @@ function Signup() {
       password: '',
     },
   });
+  const navigate = useNavigate();
+  const { updateUser } = useAuth();
   const handleSubmit = form.handleSubmit(async (data) => {
-    await signup(data.email, data.password);
+    const res = await signup(data.email, data.password);
+    await login(data.email, data.password);
+    navigate({
+      to: '/dashboard',
+    });
+    updateUser(res.user);
   });
   return (
     <main className="flex items-center justify-center font-inter min-h-screen">
