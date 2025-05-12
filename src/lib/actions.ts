@@ -35,21 +35,20 @@ export const addIncome = async (
   dispatch: FinanceDispatch,
   user_id: string | undefined
 ) => {
-  try {
-    await supabase.from('incomes').insert([
-      {
-        ...income,
-        user_id,
-      },
-    ]);
-    dispatch({
-      type: 'ADD_INCOME',
-      payload: income,
-    });
-  } catch (error) {
-    console.error('Error adding income:', error);
-    toast.error('Error adding income, please try again later.');
+  const res = await supabase.from('incomes').insert([
+    {
+      ...income,
+      user_id,
+    },
+  ]);
+  if (res.error) {
+    console.error(res.error.message);
+    throw new Error(res.error.message);
   }
+  dispatch({
+    type: 'ADD_INCOME',
+    payload: income,
+  });
 };
 
 export const addExpense = async (
@@ -57,16 +56,19 @@ export const addExpense = async (
   dispatch: FinanceDispatch,
   user_id: string | undefined
 ) => {
-  try {
-    await supabase.from('expenses').insert({ ...expense, user_id: undefined });
-    dispatch({
-      type: 'ADD_EXPENSE',
-      payload: expense,
-    });
-  } catch (error) {
-    console.error('Error adding expense:', error);
-    toast.error('Error adding expense, please try again later.');
+  const res = await supabase
+    .from('expenses')
+    .insert({ ...expense, user_id: user_id });
+
+  if (res.error) {
+    console.error(res.error.message);
+    throw new Error(res.error.message);
   }
+
+  dispatch({
+    type: 'ADD_EXPENSE',
+    payload: expense,
+  });
 };
 
 export const getTotalExpenses = (dispatch: FinanceDispatch) => {

@@ -74,23 +74,29 @@ export function IncomeForm({
   }, [incomeCategories]);
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    setSaving(true);
-    const { date, ...rest } = data;
-    const newData = {
-      ...rest,
-      date: new Date(date).toISOString(),
-      id: v4(),
-    };
-    await addIncome(newData!, dispatch, user?.id);
-    setSaving(false);
-    setShowForm(false);
-    toast.success('Income added successfully', {
-      description: `You have added a new income of ₦${newData.amount.toLocaleString()} for ${format(
-        new Date(newData.date),
-        'PPP'
-      )}`,
-      duration: 3000,
-    });
+    try {
+      setSaving(true);
+      const { date, ...rest } = data;
+      const newData = {
+        ...rest,
+        date: new Date(date).toISOString(),
+        id: v4(),
+      };
+      await addIncome(newData!, dispatch, user?.id);
+      setShowForm(false);
+      toast.success('Income added successfully', {
+        description: `You have added a new income of ₦${newData.amount.toLocaleString()} for ${format(
+          new Date(newData.date),
+          'PPP'
+        )}`,
+        duration: 3000,
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error('Error adding income, please try again later.');
+    } finally {
+      setSaving(false);
+    }
   }
 
   useEffect(() => {
