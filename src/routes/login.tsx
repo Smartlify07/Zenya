@@ -50,8 +50,8 @@ function Login() {
   });
 
   return (
-    <main className="flex items-center justify-center font-inter min-h-screen">
-      <div className="flex flex-col space-y-10 max-w-sm min-w-sm  items-center justify-center">
+    <main className="flex items-center justify-center px-4 font-inter min-h-screen">
+      <div className="flex flex-col space-y-10 w-full sm:max-w-sm sm:min-w-sm  items-center justify-center">
         <header className="flex flex-col items-center gap-1">
           <h1 className="text-neutral-800 flex items-center gap-3 text-xl text-center font-semibold">
             Welcome to Zenya <Logo />
@@ -64,11 +64,14 @@ function Login() {
         <div className="flex flex-col w-full gap-4">
           <Button
             onClick={async () => {
+              setLoading(true);
               await googleSignIn();
+              setLoading(false);
             }}
             variant={'outline'}
             className="rounded-sm flex items-center w-full justify-center"
           >
+            {loading && <Loader2 />}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               x="0px"
