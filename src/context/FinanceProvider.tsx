@@ -30,16 +30,14 @@ const initialState: FinanceState = {
 
 const FinanceProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(financeReducer, initialState);
-  const user = useAuth();
+  const { user } = useAuth();
   useEffect(() => {
     const fetchData = async () => {
-      await fetchIncomes(dispatch);
-      await fetchExpenses(dispatch);
+      await fetchIncomes(dispatch, user?.id);
+      await fetchExpenses(dispatch, user?.id);
       await getTotalBalance(dispatch);
     };
-    if (user) {
-      fetchData();
-    }
+    if (user) fetchData();
   }, [dispatch, user]);
   return (
     <FinanceContext.Provider

@@ -37,6 +37,7 @@ import { addExpense } from '@/lib/actions';
 import { useEffect, useMemo, useState } from 'react';
 import { useFinance } from '@/hooks/useFinance';
 import { toast } from 'sonner';
+import { useAuth } from '@/hooks/use-auth';
 const FormSchema = z.object({
   payee: z.string().optional(),
 
@@ -62,6 +63,7 @@ export function ExpenseForm({
     },
   });
   const { dispatch } = useFinance();
+  const { user } = useAuth();
   const [saving, setSaving] = useState(false);
   const randomCategory = useMemo(() => {
     return expenseCategories[
@@ -80,7 +82,7 @@ export function ExpenseForm({
       date: new Date(date).toISOString(),
     };
 
-    await addExpense(newData, dispatch);
+    await addExpense(newData, dispatch, user?.id);
     setShowForm(false);
     setSaving(false);
     toast.success('Expense added successfully', {

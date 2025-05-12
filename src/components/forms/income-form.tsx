@@ -38,6 +38,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useFinance } from '@/hooks/useFinance';
 import { toast } from 'sonner';
 import { v4 } from 'uuid';
+import { useAuth } from '@/hooks/use-auth';
 const FormSchema = z.object({
   date: z.date(),
   notes: z.string().optional(),
@@ -53,6 +54,7 @@ export function IncomeForm({
 }) {
   const { dispatch } = useFinance();
   const [saving, setSaving] = useState(false);
+  const { user } = useAuth();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -79,7 +81,7 @@ export function IncomeForm({
       date: new Date(date).toISOString(),
       id: v4(),
     };
-    await addIncome(newData!, dispatch);
+    await addIncome(newData!, dispatch, user?.id);
     setSaving(false);
     setShowForm(false);
     toast.success('Income added successfully', {
