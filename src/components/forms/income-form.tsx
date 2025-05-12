@@ -42,8 +42,8 @@ import { useAuth } from '@/hooks/use-auth';
 const FormSchema = z.object({
   date: z.date(),
   notes: z.string().optional(),
-  amount: z.coerce.number(),
-  category: z.string(),
+  amount: z.coerce.number().min(1, "Expense amount can't be less than one"),
+  category: z.string().min(1, 'Category cannot be empty'),
   source: z.string().optional(),
 });
 
