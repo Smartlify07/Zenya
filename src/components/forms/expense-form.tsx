@@ -37,6 +37,7 @@ import { addExpense } from '@/lib/actions';
 import { useEffect, useMemo, useState } from 'react';
 import { useFinance } from '@/hooks/useFinance';
 import { toast } from 'sonner';
+import { useAuth } from '@/hooks/use-auth';
 const FormSchema = z.object({
   payee: z.string().optional(),
 
@@ -62,36 +63,46 @@ export function ExpenseForm({
     },
   });
   const { dispatch } = useFinance();
+  const { user } = useAuth();
   const [saving, setSaving] = useState(false);
   const randomCategory = useMemo(() => {
     return expenseCategories[
       Math.floor(Math.random() * expenseCategories.length - 1) ??
         'Client Projects'
-    ].label;
+    ]?.label;
   }, [expenseCategories]);
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     setSaving(true);
-    const { date, ...rest } = data;
 
-    const newData = {
-      ...rest,
-      id: v4(),
-      date: new Date(date).toISOString(),
-    };
+    try {
+      const { date, ...rest } = data;
 
-    await addExpense(newData, dispatch);
-    setShowForm(false);
-    setSaving(false);
-    toast.success('Expense added successfully', {
-      description: `You have added a new expense of ₦
-${newData.amount.toLocaleString()} for ${format(
-        new Date(newData.date),
-        'PPP'
-      )}`,
-      duration: 3000,
-    });
+      const newData = {
+        ...rest,
+        id: v4(),
+        date: new Date(date).toISOString(),
+      };
+
+      await addExpense(newData, dispatch, user?.id);
+
+      toast.success('Expense added successfully', {
+        description: `You have added a new expense of ₦${newData.amount.toLocaleString()} for ${format(
+          new Date(newData.date),
+          'PPP'
+        )}`,
+        duration: 3000,
+      });
+
+      setShowForm(false);
+    } catch (error) {
+      console.error('Error adding expense:', error);
+      toast.error('Error adding expense, please try again later.');
+    } finally {
+      setSaving(false);
+    }
   }
+
   useEffect(() => {
     if (form.formState.isSubmitSuccessful)
       form.reset({
