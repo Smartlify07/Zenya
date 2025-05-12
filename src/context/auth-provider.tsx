@@ -21,7 +21,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   const isAuthenticated = !!user?.id;
-  console.log(user, loading);
 
   const updateUser = (data: User | null) => {
     setUser(data);
@@ -30,7 +29,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const handleGetUser = async () => {
       try {
         const user = await getUser();
-        console.log(user);
         setUser(user?.data?.user ?? null);
       } catch (error) {
         console.error('Failed to get user:', error);
