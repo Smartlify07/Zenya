@@ -6,9 +6,6 @@ export const signup = async (email: string, password: string) => {
     const user = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        emailRedirectTo: 'localhost:3000',
-      },
     });
     if (user.error) {
       toast.error(user.error.message);
