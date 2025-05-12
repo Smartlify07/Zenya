@@ -34,7 +34,10 @@ export const EmptyStateCard = ({
         )}
       >
         <CardHeader className="w-full">
-          <FileWarning className="w-10 mb-4 h-10 text-muted-foreground mx-auto" />
+          <FileWarning
+            strokeWidth={'1px'}
+            className="w-10 mb-4 h-10 text-muted-foreground mx-auto"
+          />
           <CardTitle>{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
         </CardHeader>
