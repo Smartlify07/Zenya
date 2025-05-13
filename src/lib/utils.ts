@@ -1,3 +1,4 @@
+import type { Expense, Income } from '@/types';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -66,3 +67,12 @@ export const expenseCategories = [
   { id: 'health_insurance', label: 'Health Insurance' },
   { id: 'other', label: 'Other' },
 ];
+
+export const getCategoryLabel = (
+  categories: { id: string; label: string }[],
+  item: Expense | Income
+) => {
+  const categoryLabel =
+    categories.find((category) => category.id === item.category)?.label ?? '';
+  return categoryLabel;
+};
