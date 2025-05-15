@@ -4,7 +4,7 @@ import { Badge } from '../ui/badge';
 
 export const ExpenseBreakdown = () => {
   return (
-    <section className="md:w-6/12 flex flex-col gap-4">
+    <section className="md:w-6/12 flex flex-col gap-6">
       <div className="gap-2 flex flex-col">
         <h1 className="text-lg font-inter font-medium">Expense Breakdown</h1>
         <ExpenseGrid />
