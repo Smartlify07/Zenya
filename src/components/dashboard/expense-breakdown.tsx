@@ -12,6 +12,7 @@ export const ExpenseBreakdown = () => {
       <div className="flex items-center gap-2 flex-wrap">
         {expenseCategories.slice(0, 5).map((category) => (
           <Badge
+            key={category.id}
             className={`self-end font-medium font-inter ${
               CATEGORY_COLORS[category.id]
             }`}
