@@ -1,5 +1,7 @@
 import Navbar from '@/components/navbar';
+import CallToAction from '@/components/pages/landing/cta';
 import Features from '@/components/pages/landing/features';
+import Footer from '@/components/pages/landing/footer';
 import Hero from '@/components/pages/landing/hero';
 import ProblemSection from '@/components/pages/landing/problem-section';
 import SolutionSection from '@/components/pages/landing/solution-section';
@@ -13,6 +15,8 @@ export default function LandingPage() {
         <ProblemSection />
         <SolutionSection />
         <Features />
+        <CallToAction />
+        <Footer />
       </div>
     </main>
   );
