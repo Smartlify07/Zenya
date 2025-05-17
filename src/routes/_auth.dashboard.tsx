@@ -145,14 +145,18 @@ function Dashboard() {
   };
 
   return (
-    <main className="flex flex-col gap-8 px-4 py-4 md:px-4">
-      {loading ? (
-        <div className="grid gap-4 md:grid-cols-3">{renderStatSkeletons()}</div>
-      ) : (
-        renderStatCards()
-      )}
-      {renderIncomesOverview()}
-      {renderExpensesOverview()}
+    <main className="flex flex-col gap-8 items-center px-4 py-4 md:px-4">
+      <div className="flex flex-col gap-8 w-full max-w-[1440px]">
+        {loading ? (
+          <div className="grid gap-4 md:grid-cols-3">
+            {renderStatSkeletons()}
+          </div>
+        ) : (
+          renderStatCards()
+        )}
+        {renderIncomesOverview()}
+        {renderExpensesOverview()}
+      </div>
     </main>
   );
 }
