@@ -6,7 +6,6 @@ import Hero from '@/components/pages/landing/hero';
 import ProblemSection from '@/components/pages/landing/problem-section';
 import SolutionSection from '@/components/pages/landing/solution-section';
 import { Helmet } from 'react-helmet-async';
-import OGImage from '@/../public/images/mockup.png';
 
 export default function LandingPage() {
   return (
