@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
-
+import { HelmetProvider } from 'react-helmet-async';
 // Import the generated route tree
 import { routeTree } from './routeTree.gen';
 
@@ -32,8 +32,13 @@ declare module '@tanstack/react-router' {
 
 const Auth = () => {
   const auth = useAuth();
-  return <RouterProvider context={{ auth }} router={router} />;
+  return (
+    <HelmetProvider>
+      <RouterProvider context={{ auth }} router={router} />;
+    </HelmetProvider>
+  );
 };
+
 const App = () => {
   return (
     <AuthProvider>
