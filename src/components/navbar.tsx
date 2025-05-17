@@ -6,7 +6,6 @@ import { useNavigate } from '@tanstack/react-router';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,7 +20,7 @@ export default function Navbar() {
   return (
     <nav
       className={cn(
-        `flex rounded-2xl top-10 md:w-10/12 z-40 items-center fixed font-inter justify-between px-5 py-4 border shadow-xs`,
+        `flex rounded-2xl top-10 w-11/12 md:w-11/12 z-40 items-center fixed font-inter justify-between px-5 py-4 border shadow-xs`,
         isScrolled
           ? 'bg-background/80 backdrop-blur-md border-b'
           : 'bg-transparent'
