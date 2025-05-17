@@ -21,9 +21,15 @@ export default function LandingPage() {
           property="og:description"
           content="No more spreadsheets. Zenya helps you track income, expenses & stay on top of your freelance money."
         />
-        <meta property="og:image" content={OGImage} />
+        <meta
+          property="og:image"
+          content={'https://zenya-rosy.vercel.app/images/mockup.png'}
+        />
         <meta property="og:url" content="https://zenya-rosy.vercel.app" />
-        <meta name="twitter:card" content={OGImage} />
+        <meta
+          name="twitter:card"
+          content={'https://zenya-rosy.vercel.app/images/mockup.png'}
+        />
       </Helmet>
       <main className="flex flex-col items-center relative gap-4">
         <Navbar />
