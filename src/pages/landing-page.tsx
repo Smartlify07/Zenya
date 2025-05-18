@@ -22,12 +22,16 @@ export default function LandingPage() {
         />
         <meta
           property="og:image"
-          content={'https://zenya-rosy.vercel.app/images/mockup.png'}
+          content={
+            'https://res.cloudinary.com/dgpbznsc3/image/upload/v1747567469/zenya-rosy.vercel.app__eeft5p.png'
+          }
         />
         <meta property="og:url" content="https://zenya-rosy.vercel.app" />
         <meta
           name="twitter:card"
-          content={'https://zenya-rosy.vercel.app/images/mockup.png'}
+          content={
+            'https://res.cloudinary.com/dgpbznsc3/image/upload/v1747567469/zenya-rosy.vercel.app__eeft5p.png'
+          }
         />
       </Helmet>
       <main className="flex flex-col items-center relative gap-4">
