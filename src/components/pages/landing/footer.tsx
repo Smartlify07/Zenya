@@ -3,7 +3,7 @@ import { Logo } from '@/components/logo';
 export default function Footer() {
   const currentYear = new Date().getFullYear();
   return (
-    <footer className="flex flex-col items-center md:flex-row md:items-center py-10 font-inter justify-between px-4 md:px-10 gap-4">
+    <footer className="flex flex-col items-center md:flex-row md:items-center py-10 font-inter justify-between px-6 md:px-10 gap-4">
       <h1 className="flex items-center gap-2">
         <Logo /> Zenya
       </h1>

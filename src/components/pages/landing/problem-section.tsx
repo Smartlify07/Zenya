@@ -2,7 +2,7 @@ import Spreadsheet from '@/../public/images/spreadsheet.png';
 import Zenya from '@/../public/images/mockup.png';
 export default function ProblemSection() {
   return (
-    <section className="flex flex-col items-center px-4 py-10 md:px-6 md:py-20 font-inter">
+    <section className="flex flex-col items-center px-6 py-10 md:px-6 md:py-20 font-inter">
       <div className="max-w-7xl flex flex-col w-full items-center gap-10 md:gap-20">
         <header className="md:10/12 lg:w-6/12 items-center flex flex-col gap-4">
           <h1 className="text-2xl md:text-4xl self-center text-center font-medium text-primary">

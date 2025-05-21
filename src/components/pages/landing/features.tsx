@@ -21,7 +21,7 @@ const features = [
 ];
 export default function Features() {
   return (
-    <section className="flex flex-col items-center px-4 py-10 md:py-20 md:px-10 font-inter">
+    <section className="flex flex-col items-center px-6 py-10 md:py-20 md:px-10 font-inter">
       <div className="max-w-7xl flex flex-col items-center gap-10">
         <header className="flex flex-col items-center md:w-10/12 lg:w-6/12">
           <h1 className="text-2xl md:text-4xl text-center font-medium text-primary">
