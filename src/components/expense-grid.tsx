@@ -52,7 +52,6 @@ export const ExpenseGrid = () => {
     <div className="grid font-inter gap-2 justify-items-start grid-cols-7">
       {dates.map((date) => {
         const expense = findExpense(date.date);
-        console.log(expense);
         return (
           <TooltipProvider key={date.date}>
             <Tooltip>

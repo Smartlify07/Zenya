@@ -10,7 +10,7 @@ export const Route = createFileRoute('/_auth')({
 });
 
 export function AppLayout() {
-  const { user, loading } = useAuth();
+  const { user, loading, updateUser } = useAuth();
   if (!loading && !user?.id) {
     return <Navigate to="/login" />;
   }
@@ -21,7 +21,7 @@ export function AppLayout() {
         <SidebarInset>
           <div className="@container/main flex flex-1 flex-col gap-2">
             <div className="flex flex-col gap-4 md:gap-6">
-              <DashboardTopNav />
+              <DashboardTopNav updateUser={updateUser} user={user} />
               <Outlet />
             </div>
           </div>
