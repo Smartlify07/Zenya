@@ -1,6 +1,6 @@
 import { toast } from 'sonner';
 import { supabase } from './supabase';
-
+import { redirect } from '@tanstack/react-router';
 export const signup = async (email: string, password: string) => {
   try {
     const user = await supabase.auth.signUp({
@@ -76,6 +76,19 @@ export const isAuthenticated = async () => {
   try {
     const response = await getUser();
     response?.data.user?.id ? true : false;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const logout = async () => {
+  try {
+    await supabase.auth.signOut();
+
+    redirect({
+      to: '/login',
+    });
+    return null;
   } catch (error) {
     console.error(error);
   }
