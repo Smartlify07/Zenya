@@ -2,6 +2,7 @@ import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { HelmetProvider } from 'react-helmet-async';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 // Import the generated route tree
 import { routeTree } from './routeTree.gen';
 
@@ -40,10 +41,13 @@ const Auth = () => {
 };
 
 const App = () => {
+  const queryClient = new QueryClient();
   return (
-    <AuthProvider>
-      <Auth />
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <Auth />
+      </AuthProvider>
+    </QueryClientProvider>
   );
 };
 
