@@ -1,3 +1,4 @@
+import { AuthLoader } from '@/components/auth-loader';
 import { Logo } from '@/components/logo';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,8 +14,7 @@ import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/hooks/use-auth';
 import { googleSignIn, login, signup } from '@/lib/auth.actions';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { Loader2 } from 'lucide-react';
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -36,6 +36,7 @@ function Signup() {
     },
   });
   const [loading, setLoading] = useState(false);
+  const [loadingGoogle, setLoadingGoogle] = useState(false);
 
   const navigate = useNavigate();
   const { updateUser } = useAuth();
@@ -64,14 +65,16 @@ function Signup() {
         <div className="flex flex-col w-full gap-4">
           <Button
             onClick={async () => {
-              setLoading(true);
+              setLoadingGoogle(true);
               await googleSignIn();
-              setLoading(false);
+              setLoadingGoogle(false);
             }}
             variant={'outline'}
             className="rounded-sm flex items-center w-full justify-center"
           >
-            {loading && <Loader2 className="text-black" fill="#000" />}
+            {loadingGoogle && (
+              <AuthLoader className="text-black animate-spin" fill="#000" />
+            )}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               x="0px"
@@ -150,11 +153,33 @@ function Signup() {
                 type="submit"
                 className="rounded-sm flex items-center w-full justify-center"
               >
-                {loading && <Loader2 />}
+                {loading && <AuthLoader />}
                 Continue with Email
               </Button>
             </form>
           </Form>
+        </div>
+
+        <div className="flex flex-col items-center gap-2">
+          <p className="text-sm text-neutral-500">
+            Already have an account?{' '}
+            <Link to="/login" className="text-primary hover:underline">
+              Login
+            </Link>
+          </p>
+          <p className="text-sm text-center text-neutral-500">
+            By continuing, you agree to our{' '}
+            <Link to="/" className="text-primary font-medium hover:underline">
+              Terms of Service
+            </Link>{' '}
+            and{' '}
+            <a
+              href="/privacy"
+              className="text-primary font-medium hover:underline"
+            >
+              Privacy Policy
+            </a>
+          </p>
         </div>
       </div>
     </main>

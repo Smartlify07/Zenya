@@ -31,7 +31,7 @@ import {
 import { Textarea } from '../ui/textarea';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { cn, expenseCategories } from '@/lib/utils';
-import { CalendarIcon, Loader2 } from 'lucide-react';
+import { CalendarIcon } from 'lucide-react';
 import { Calendar } from '../ui/calendar';
 import { format } from 'date-fns';
 import { addExpense } from '@/lib/actions';
@@ -39,6 +39,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useFinance } from '@/hooks/useFinance';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/use-auth';
+import { AuthLoader } from '../auth-loader';
 const FormSchema = z.object({
   payee: z.string().optional(),
   date: z.date(),
@@ -231,7 +232,7 @@ export function ExpenseForm({
               Cancel
             </DialogClose>
             <Button disabled={saving} type="submit" className="flex-1">
-              {saving ? <Loader2 /> : null}
+              {saving ? <AuthLoader /> : null}
               Submit
             </Button>
           </div>
