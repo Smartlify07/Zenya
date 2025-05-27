@@ -1,3 +1,4 @@
+import { AuthLoader } from '@/components/auth-loader';
 import { Logo } from '@/components/logo';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,8 +14,7 @@ import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/hooks/use-auth';
 import { googleSignIn, login } from '@/lib/auth.actions';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { Loader2 } from 'lucide-react';
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -37,21 +37,27 @@ function Login() {
   });
   const { updateUser } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [loadingGoogle, setLoadingGoogle] = useState(false);
   const navigate = useNavigate();
   const handleSubmit = form.handleSubmit(async (data) => {
-    setLoading(true);
-    const res = await login(data.email, data.password);
-    navigate({ to: '/dashboard' });
-    setLoading(false);
-    navigate({
-      to: '/dashboard',
-    });
-    updateUser(res.user);
+    try {
+      setLoading(true);
+      const res = await login(data.email, data.password);
+      navigate({ to: '/dashboard' });
+      setLoading(false);
+      navigate({
+        to: '/dashboard',
+      });
+      updateUser(res.user);
+    } catch (error) {
+      console.error('Login error:', error);
+      setLoading(false);
+    }
   });
 
   return (
     <main className="flex items-center justify-center px-4 font-inter min-h-screen">
-      <div className="flex flex-col space-y-10 w-full sm:max-w-sm sm:min-w-sm  items-center justify-center">
+      <div className="flex flex-col space-y-10 w-full sm:max-w-sm sm:min-w-sm items-center justify-center">
         <header className="flex flex-col items-center gap-1">
           <h1 className="text-neutral-800 flex items-center gap-3 text-xl text-center font-semibold">
             Welcome to Zenya <Logo />
@@ -64,14 +70,14 @@ function Login() {
         <div className="flex flex-col w-full gap-4">
           <Button
             onClick={async () => {
-              setLoading(true);
+              setLoadingGoogle(true);
               await googleSignIn();
-              setLoading(false);
+              setLoadingGoogle(false);
             }}
             variant={'outline'}
             className="rounded-sm flex items-center w-full justify-center"
           >
-            {loading && <Loader2 />}
+            {loadingGoogle && <AuthLoader />}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               x="0px"
@@ -150,11 +156,33 @@ function Login() {
                 type="submit"
                 className="rounded-sm flex items-center w-full justify-center"
               >
-                {loading && <Loader2 />}
+                {loading && <AuthLoader />}
                 Continue with Email
               </Button>
             </form>
           </Form>
+        </div>
+
+        <div className="flex flex-col items-center gap-2">
+          <p className="text-sm text-neutral-500">
+            Don&apos;t have an account?{' '}
+            <Link to="/signup" className="text-primary hover:underline">
+              Sign up
+            </Link>
+          </p>
+          <p className="text-sm text-center text-neutral-500">
+            By continuing, you agree to our{' '}
+            <Link to="/" className="text-primary font-medium hover:underline">
+              Terms of Service
+            </Link>{' '}
+            and{' '}
+            <a
+              href="/privacy"
+              className="text-primary font-medium hover:underline"
+            >
+              Privacy Policy
+            </a>
+          </p>
         </div>
       </div>
     </main>
