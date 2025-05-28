@@ -1,37 +1,36 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Link } from "@tanstack/react-router";
+import { useAuth } from "@/hooks/use-auth";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
+import VerifyEmailCard from "@/components/cards/verify-email-card";
+import { Spinner } from "@/components/ui/spinner";
 
 export const Route = createFileRoute("/verify-email")({
-  component: VerifyEmailCard,
+  component: VerifyEmail,
 });
 
-export default function VerifyEmailCard() {
-  return (
-    <div className="flex items-center justify-center min-h-screen bg-white dark:bg-black text-black dark:text-white">
-      <Card className="w-full max-w-md border border-black dark:border-white bg-white dark:bg-black">
-        <CardHeader>
-          <CardTitle className="text-xl font-semibold">
-            Please verify your email
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <p>
-            An email has been sent to your address. Please check your inbox and
-            follow the link to verify your email.
-          </p>
-          <div className="flex justify-end">
-            <Button
-              asChild
-              variant="outline"
-              className="border-black dark:border-white text-black dark:text-white hover:bg-gray-100 dark:hover:bg-white/10"
-            >
-              <Link to="/login">Verify Email</Link>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
+function VerifyEmail() {
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (loading) return;
+    if (!user) {
+      navigate({ to: "/login" });
+    } else if (!user.confirmed_at) {
+      // Do nothing, allow to verify
+    } else {
+      navigate({ to: "/dashboard" });
+    }
+  }, [user, navigate, loading]);
+
+  if (loading) {
+    return (
+      <div className="min-h-[80vw] flex flex-col justify-center align-center">
+        <Spinner className="size-10" />
+      </div>
+    );
+  }
+  return <VerifyEmailCard />;
 }
+
+export default VerifyEmail;
