@@ -44,6 +44,7 @@ function Signup() {
     setLoading(true);
     const res = await signup(data.email, data.password);
     await login(data.email, data.password);
+    console.log(res);
     navigate({
       to: '/dashboard',
     });
