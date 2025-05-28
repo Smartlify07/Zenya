@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as VerifyEmailImport } from './routes/verify-email'
 import { Route as SignupImport } from './routes/signup'
 import { Route as LoginImport } from './routes/login'
 import { Route as AuthImport } from './routes/_auth'
@@ -20,6 +21,12 @@ import { Route as AuthExpensesImport } from './routes/_auth.expenses'
 import { Route as AuthDashboardImport } from './routes/_auth.dashboard'
 
 // Create/Update Routes
+
+const VerifyEmailRoute = VerifyEmailImport.update({
+  id: '/verify-email',
+  path: '/verify-email',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const SignupRoute = SignupImport.update({
   id: '/signup',
@@ -94,6 +101,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupImport
       parentRoute: typeof rootRoute
     }
+    '/verify-email': {
+      id: '/verify-email'
+      path: '/verify-email'
+      fullPath: '/verify-email'
+      preLoaderRoute: typeof VerifyEmailImport
+      parentRoute: typeof rootRoute
+    }
     '/_auth/dashboard': {
       id: '/_auth/dashboard'
       path: '/dashboard'
@@ -139,6 +153,7 @@ export interface FileRoutesByFullPath {
   '': typeof AuthRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/verify-email': typeof VerifyEmailRoute
   '/dashboard': typeof AuthDashboardRoute
   '/expenses': typeof AuthExpensesRoute
   '/incomes': typeof AuthIncomesRoute
@@ -149,6 +164,7 @@ export interface FileRoutesByTo {
   '': typeof AuthRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/verify-email': typeof VerifyEmailRoute
   '/dashboard': typeof AuthDashboardRoute
   '/expenses': typeof AuthExpensesRoute
   '/incomes': typeof AuthIncomesRoute
@@ -160,6 +176,7 @@ export interface FileRoutesById {
   '/_auth': typeof AuthRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/verify-email': typeof VerifyEmailRoute
   '/_auth/dashboard': typeof AuthDashboardRoute
   '/_auth/expenses': typeof AuthExpensesRoute
   '/_auth/incomes': typeof AuthIncomesRoute
@@ -172,17 +189,27 @@ export interface FileRouteTypes {
     | ''
     | '/login'
     | '/signup'
+    | '/verify-email'
     | '/dashboard'
     | '/expenses'
     | '/incomes'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '' | '/login' | '/signup' | '/dashboard' | '/expenses' | '/incomes'
+  to:
+    | '/'
+    | ''
+    | '/login'
+    | '/signup'
+    | '/verify-email'
+    | '/dashboard'
+    | '/expenses'
+    | '/incomes'
   id:
     | '__root__'
     | '/'
     | '/_auth'
     | '/login'
     | '/signup'
+    | '/verify-email'
     | '/_auth/dashboard'
     | '/_auth/expenses'
     | '/_auth/incomes'
@@ -194,6 +221,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
+  VerifyEmailRoute: typeof VerifyEmailRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -201,6 +229,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
+  VerifyEmailRoute: VerifyEmailRoute,
 }
 
 export const routeTree = rootRoute
@@ -216,7 +245,8 @@ export const routeTree = rootRoute
         "/",
         "/_auth",
         "/login",
-        "/signup"
+        "/signup",
+        "/verify-email"
       ]
     },
     "/": {
@@ -235,6 +265,9 @@ export const routeTree = rootRoute
     },
     "/signup": {
       "filePath": "signup.tsx"
+    },
+    "/verify-email": {
+      "filePath": "verify-email.tsx"
     },
     "/_auth/dashboard": {
       "filePath": "_auth.dashboard.tsx",

@@ -12,7 +12,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/hooks/use-auth';
-import { googleSignIn, login, signup } from '@/lib/auth.actions';
+import { googleSignIn, signup } from '@/lib/auth.actions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
@@ -43,10 +43,9 @@ function Signup() {
   const handleSubmit = form.handleSubmit(async (data) => {
     setLoading(true);
     const res = await signup(data.email, data.password);
-    await login(data.email, data.password);
-    console.log(res);
+    // await login(data.email, data.password); -- Cause of bug
     navigate({
-      to: '/dashboard',
+      to: '/verify-email',
     });
     setLoading(false);
     updateUser(res.user);
