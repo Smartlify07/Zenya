@@ -116,7 +116,7 @@ export function ExpenseForm({
   }, [form.formState]);
 
   return (
-    <div className="w-full flex flex-col gap-4">
+    <div className="w-full flex flex-col gap-3">
       <DialogHeader>
         <DialogTitle>Add Expense</DialogTitle>
         <DialogDescription>
@@ -124,7 +124,7 @@ export function ExpenseForm({
         </DialogDescription>
       </DialogHeader>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
           <FormField
             control={form.control}
             name="amount"
@@ -132,17 +132,6 @@ export function ExpenseForm({
               <FormItem>
                 <FormLabel>Amount</FormLabel>
                 <Input type="number" {...field} />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="payee"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Payee</FormLabel>
-                <Input type="text" {...field} />
                 <FormMessage />
               </FormItem>
             )}
@@ -190,6 +179,17 @@ export function ExpenseForm({
           />
           <FormField
             control={form.control}
+            name="payee"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Payee</FormLabel>
+                <Input type="text" {...field} />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="category"
             render={({ field }) => (
               <FormItem>
@@ -220,7 +220,7 @@ export function ExpenseForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Notes</FormLabel>
-                <Textarea {...field} />
+                <Textarea {...field} className="max-h-30" />
                 <FormMessage />
               </FormItem>
             )}

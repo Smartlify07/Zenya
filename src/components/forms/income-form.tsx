@@ -110,7 +110,7 @@ export function IncomeForm({
       });
   }, [form.formState]);
   return (
-    <div className="w-full flex flex-col gap-4">
+    <div className="w-full flex flex-col gap-2">
       <DialogHeader>
         <DialogTitle>Add income</DialogTitle>
         <DialogDescription>
@@ -118,7 +118,7 @@ export function IncomeForm({
         </DialogDescription>
       </DialogHeader>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
           <FormField
             control={form.control}
             name="amount"
@@ -126,17 +126,6 @@ export function IncomeForm({
               <FormItem>
                 <FormLabel>Amount</FormLabel>
                 <Input type="number" {...field} />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="source"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Source</FormLabel>
-                <Input type="text" {...field} />
                 <FormMessage />
               </FormItem>
             )}
@@ -167,7 +156,7 @@ export function IncomeForm({
                       </div>
                     </FormControl>
                   </PopoverTrigger>
-                  <PopoverContent className="w-full p-0" align="start">
+                  <PopoverContent className="w-full p-0" align='end'>
                     <Calendar
                       mode="single"
                       selected={field.value ? new Date(field.value) : undefined}
@@ -178,6 +167,17 @@ export function IncomeForm({
                     />
                   </PopoverContent>
                 </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="source"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Source</FormLabel>
+                <Input type="text" {...field} />
                 <FormMessage />
               </FormItem>
             )}
@@ -216,7 +216,7 @@ export function IncomeForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Notes</FormLabel>
-                <Textarea {...field} />
+                <Textarea {...field} className="max-h-30" />
                 <FormMessage />
               </FormItem>
             )}
