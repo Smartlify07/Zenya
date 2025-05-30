@@ -2,8 +2,20 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
-import { useNavigate } from '@tanstack/react-router';
-
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form';
+import { joinWaitlist } from '@/lib/waitlist.actions';
+import { useState } from 'react';
+import { AuthLoader } from '@/components/auth-loader';
+import { toast } from 'sonner';
 export default function LandingPage() {
   return (
     <div className="min-h-screen">
@@ -16,9 +28,20 @@ export default function LandingPage() {
 }
 
 function HeroSection() {
-  const navigate = useNavigate();
+  const formSchema = z.object({
+    email: z.string().email('Invalid email address'),
+  });
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: '',
+    },
+  });
+  const handleJoinWaitlist = form.handleSubmit(async (values) => {
+    await joinWaitlist(values.email);
+  });
   return (
-    <section className="flex font-inter pt-48 pb-20 px-4 md:px-0 justify-center flex-col items-center">
+    <section className="flex font-inter pt-48 pb-20 px-4 md:px-0 justify-center flex-col  gap-8 items-center">
       <header className="flex flex-col md:w-10/12 lg:w-6/12 items-center gap-5">
         <h1 className="text-3xl md:text-6xl font-medium text-primary text-center font-inter">
           The Simple CRM for Freelancers
@@ -27,19 +50,42 @@ function HeroSection() {
           Zenya helps you stay on top of your clients, income, and expenses —
           all in one clean dashboard.
         </h3>
-
-        <div className="flex items-center gap-4">
-          <Input placeholder="johndoe@example.com" />
-          <Button
-            onClick={() => {
-              navigate({ to: '/signup' });
-            }}
-            className="bg-primary font-inter"
-          >
-            Join Waitlist
-          </Button>
-        </div>
       </header>
+
+      <div className="w-full items-center justify-center flex flex-col md:flex-row">
+        <Form {...form}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleJoinWaitlist();
+            }}
+            className="flex flex-col md:flex-row items-center gap-4 w-full md:w-11/12 justify-center"
+          >
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem className=" w-full md:w-3/12">
+                  <FormControl>
+                    <Input
+                      type="email"
+                      placeholder="johndoe@example.com"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />{' '}
+            <Button
+              onClick={() => {}}
+              className="bg-primary w-full md:w-auto font-inter"
+            >
+              Join the Waitlist
+            </Button>
+          </form>
+        </Form>
+      </div>
     </section>
   );
 }
@@ -95,22 +141,80 @@ function BuiltForSection() {
 }
 
 function CTASection() {
+  const formSchema = z.object({
+    email: z.string().email('Invalid email address'),
+  });
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: '',
+    },
+  });
+  const [loading, setLoading] = useState(false);
+  const handleJoinWaitlist = form.handleSubmit(async (values) => {
+    try {
+      setLoading(true);
+      const { error } = await joinWaitlist(values.email);
+      if (error) {
+        console.error(error);
+        toast.error(
+          error.message ??
+            'An error occurred trying to join the waitlist, please try again'
+        );
+      } else {
+        toast.success(`You're in! We'll send early access details soon.`);
+      }
+    } catch (error) {
+      setLoading(false);
+      toast.error('An error occured please try again');
+      console.error('An unexpected error occurred');
+    } finally {
+      setLoading(false);
+    }
+  });
   return (
-    <section className="px-6 py-20 bg-neutral-900 text-center">
-      <h2 className="text-2xl md:text-3xl font-semibold mb-4">
+    <section className="px-6 bg-primary py-20 font-inter text-center">
+      <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">
         Get early access
       </h2>
-      <p className="text-neutral-400 max-w-xl mx-auto mb-6">
-        Join the waitlist and be the first to try the new Zenya. Early users get{' '}
-        <strong>3 months free</strong> and exclusive features before public
-        launch.
+      <p className="text-white/70 max-w-xl mx-auto mb-6">
+        Join the waitlist and be the first to try the new Zenya.
       </p>
-      <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3 max-w-md mx-auto">
-        <Input
-          placeholder="Enter your email"
-          className="bg-neutral-800 border-neutral-700"
-        />
-        <Button className="w-full sm:w-auto">Join the Waitlist</Button>
+      <div className="w-full items-center justify-center flex flex-col md:flex-row">
+        <Form {...form}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleJoinWaitlist();
+            }}
+            className="flex flex-col md:flex-row items-center gap-4 w-full md:w-11/12 justify-center"
+          >
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem className=" w-full md:w-3/12">
+                  <FormControl>
+                    <Input
+                      className="text-white"
+                      type="email"
+                      placeholder="johndoe@example.com"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />{' '}
+            <Button
+              onClick={() => {}}
+              className="bg-white text-primary w-full md:w-auto font-inter flex items-center gap-4"
+            >
+              {loading && <AuthLoader />}
+              Join the Waitlist
+            </Button>
+          </form>
+        </Form>
       </div>
     </section>
   );
