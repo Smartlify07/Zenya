@@ -10,13 +10,12 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Separator } from '@/components/ui/separator';
-import { useAuth } from '@/hooks/use-auth';
-import { googleSignIn, login, signup } from '@/lib/auth.actions';
+import { signUp } from '@/lib/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
+import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 export const Route = createFileRoute('/signup')({
@@ -28,6 +27,8 @@ function Signup() {
     email: z.string().min(2).max(50).email('Invalid email address'),
     password: z.string().min(8, 'Password must be at least 8 characters long'),
   });
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,21 +36,30 @@ function Signup() {
       password: '',
     },
   });
-  const [loading, setLoading] = useState(false);
-  const [loadingGoogle, setLoadingGoogle] = useState(false);
 
-  const navigate = useNavigate();
-  const { updateUser } = useAuth();
   const handleSubmit = form.handleSubmit(async (data) => {
-    setLoading(true);
-    const res = await signup(data.email, data.password);
-    await login(data.email, data.password);
-    navigate({
-      to: '/dashboard',
-    });
-    setLoading(false);
-    updateUser(res.user);
+    try {
+      setLoading(true);
+      const { user, error } = await signUp(data.email, data.password);
+
+      if (error) {
+        setLoading(false);
+        console.error('Supabase login error', error);
+        toast.error(error.message ?? 'Login failed, please check try again');
+      } else if (user) {
+        setLoading(false);
+        toast.success('Signed up successfully');
+
+        await router.invalidate();
+        await router.navigate({ to: '/dashboard' });
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error('Unexpected error', error);
+      setLoading(false);
+    }
   });
+
   return (
     <main className="flex items-center justify-center px-4 font-inter min-h-screen">
       <div className="flex flex-col space-y-10 w-full md:max-w-sm md:min-w-sm items-center justify-center">
@@ -62,11 +72,10 @@ function Signup() {
           </p>
         </header>
 
-        <div className="flex flex-col w-full gap-4">
+        {/* <div className="flex flex-col w-full gap-4">
           <Button
             onClick={async () => {
               setLoadingGoogle(true);
-              await googleSignIn();
               setLoadingGoogle(false);
             }}
             variant={'outline'}
@@ -104,7 +113,7 @@ function Signup() {
           </Button>
 
           <Separator orientation="horizontal" className="h-1" />
-        </div>
+        </div> */}
 
         <div className="flex flex-col w-full gap-4">
           <Form {...form}>

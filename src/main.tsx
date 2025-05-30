@@ -1,7 +1,6 @@
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
-import { HelmetProvider } from 'react-helmet-async';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 // Import the generated route tree
 import { routeTree } from './routeTree.gen';
@@ -9,14 +8,10 @@ import { routeTree } from './routeTree.gen';
 import './styles.css';
 import reportWebVitals from './reportWebVitals.ts';
 import { AuthProvider } from './context/auth-provider.tsx';
-import { useAuth } from './hooks/use-auth.ts';
 
 // Create a new router instance
 const router = createRouter({
   routeTree,
-  context: {
-    auth: undefined!,
-  },
   defaultPreload: 'intent',
   scrollRestoration: true,
   defaultStructuralSharing: true,
@@ -31,21 +26,12 @@ declare module '@tanstack/react-router' {
   }
 }
 
-const Auth = () => {
-  const auth = useAuth();
-  return (
-    <HelmetProvider>
-      <RouterProvider context={{ auth }} router={router} />;
-    </HelmetProvider>
-  );
-};
-
 const App = () => {
   const queryClient = new QueryClient();
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Auth />
+        <RouterProvider router={router} />
       </AuthProvider>
     </QueryClientProvider>
   );

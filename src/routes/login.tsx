@@ -10,13 +10,12 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Separator } from '@/components/ui/separator';
-import { useAuth } from '@/hooks/use-auth';
-import { googleSignIn, login } from '@/lib/auth.actions';
+import { login } from '@/lib/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
+import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 export const Route = createFileRoute('/login')({
@@ -35,20 +34,24 @@ function Login() {
       password: '',
     },
   });
-  const { updateUser } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [loadingGoogle, setLoadingGoogle] = useState(false);
-  const navigate = useNavigate();
+  // const [loadingGoogle, setLoadingGoogle] = useState(false);
+  const router = useRouter();
+
   const handleSubmit = form.handleSubmit(async (data) => {
     try {
       setLoading(true);
-      const res = await login(data.email, data.password);
-      navigate({ to: '/dashboard' });
-      setLoading(false);
-      navigate({
-        to: '/dashboard',
-      });
-      updateUser(res.user);
+      const { error, user } = await login(data.email, data.password);
+      if (error) {
+        setLoading(false);
+        console.error('Supabase login error', error);
+        toast.error(error.message ?? 'Login failed, please check try again');
+      } else if (user) {
+        setLoading(false);
+        toast.success('Logged in successfully');
+        await router.invalidate();
+        await router.navigate({ to: '/dashboard' });
+      }
     } catch (error) {
       console.error('Login error:', error);
       setLoading(false);
@@ -67,12 +70,10 @@ function Login() {
           </p>
         </header>
 
-        <div className="flex flex-col w-full gap-4">
+        {/* <div className="flex flex-col w-full gap-4">
           <Button
             onClick={async () => {
               setLoadingGoogle(true);
-              await googleSignIn();
-              setLoadingGoogle(false);
             }}
             variant={'outline'}
             className="rounded-sm flex items-center w-full justify-center"
@@ -107,7 +108,7 @@ function Login() {
           </Button>
 
           <Separator orientation="horizontal" className="h-1" />
-        </div>
+        </div> */}
 
         <div className="flex flex-col w-full gap-4">
           <Form {...form}>
