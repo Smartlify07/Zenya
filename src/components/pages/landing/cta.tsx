@@ -1,8 +1,6 @@
 import { Button } from '@/components/ui/button';
-import { useNavigate } from '@tanstack/react-router';
 
 export default function CallToAction() {
-  const navigate = useNavigate();
   return (
     <section className="flex flex-col items-center px-6 py-10 md:py-20 md:px-10 font-inter">
       <div className="max-w-7xl flex flex-col w-full items-center gap-6">
@@ -15,13 +13,7 @@ export default function CallToAction() {
             focus on what matters <span className="text-xl">-- your work.</span>
           </p>
         </header>
-        <Button
-          onClick={() => {
-            navigate({ to: '/signup' });
-          }}
-        >
-          Get Started
-        </Button>
+        <Button onClick={() => {}}>Get Started</Button>
       </div>
     </section>
   );

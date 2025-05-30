@@ -37,8 +37,27 @@ function HeroSection() {
       email: '',
     },
   });
+  const [loading, setLoading] = useState(false);
   const handleJoinWaitlist = form.handleSubmit(async (values) => {
-    await joinWaitlist(values.email);
+    try {
+      setLoading(true);
+      const { error } = await joinWaitlist(values.email);
+      if (error) {
+        console.error(error);
+        toast.error(
+          error.message ??
+            'An error occurred trying to join the waitlist, please try again'
+        );
+      } else {
+        toast.success(`You're in! We'll send early access details soon.`);
+      }
+    } catch (error) {
+      setLoading(false);
+      toast.error('An error occured please try again');
+      console.error('An unexpected error occurred');
+    } finally {
+      setLoading(false);
+    }
   });
   return (
     <section className="flex font-inter pt-48 pb-20 px-4 md:px-0 justify-center flex-col  gap-8 items-center">
@@ -79,8 +98,9 @@ function HeroSection() {
             />{' '}
             <Button
               onClick={() => {}}
-              className="bg-primary w-full md:w-auto font-inter"
+              className="bg-primary w-full md:w-auto flex items-center gap-4 font-inter"
             >
+              {loading && <AuthLoader />}
               Join the Waitlist
             </Button>
           </form>
@@ -207,6 +227,7 @@ function CTASection() {
               )}
             />{' '}
             <Button
+              variant={'secondary'}
               onClick={() => {}}
               className="bg-white text-primary w-full md:w-auto font-inter flex items-center gap-4"
             >

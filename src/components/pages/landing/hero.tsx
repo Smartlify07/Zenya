@@ -1,9 +1,7 @@
 import Mockup from '@/../public/images/9_1x_shots_so.png';
 import { Button } from '@/components/ui/button';
-import { useNavigate } from '@tanstack/react-router';
 
 const Hero = () => {
-  const navigate = useNavigate();
   return (
     <section className="flex pt-48 pb-20 px-4 md:px-0 justify-center flex-col items-center">
       <header className="flex flex-col md:w-10/12 lg:w-6/12 items-center gap-5">
@@ -17,7 +15,6 @@ const Hero = () => {
 
         <Button
           onClick={() => {
-            navigate({ to: '/signup' });
           }}
           className="bg-primary font-inter"
         >
