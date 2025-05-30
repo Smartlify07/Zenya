@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/sidebar';
 import { Logo } from './logo';
 import { Link } from '@tanstack/react-router';
-import { QuickActions } from './quick-actions';
 
 // Menu items.
 const items = [
@@ -47,9 +46,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <SidebarGroup className="flex flex-col gap-2">
           <SidebarGroupContent>
-            <SidebarMenuItem>
-              <QuickActions />
-            </SidebarMenuItem>
+            <SidebarMenuItem></SidebarMenuItem>
           </SidebarGroupContent>
           <SidebarGroupContent>
             <SidebarGroupLabel>Menu</SidebarGroupLabel>
