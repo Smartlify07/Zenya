@@ -1,7 +1,7 @@
 import { supabase } from '@/lib/supabase';
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/_authenticated')({
+export const Route = createFileRoute('/')({
   component: RouteComponent,
   beforeLoad: async ({ location }) => {
     const {
@@ -12,7 +12,7 @@ export const Route = createFileRoute('/_authenticated')({
     if (!session?.user) {
       console.log(true);
       console.log(session);
-      throw redirect({ to: '/login' });
+      throw redirect({ to: '/' });
     }
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
@@ -24,7 +24,7 @@ export const Route = createFileRoute('/_authenticated')({
       !profile?.onboarding_complete &&
       location.pathname !== '/profile-setup'
     ) {
-      throw redirect({ to: '/profile-setup' });
+      throw redirect({ to: '/' });
     }
     if (profileError) {
       throw new Error('Error occurred trying to get your profile');

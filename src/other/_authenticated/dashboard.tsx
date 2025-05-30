@@ -1,7 +1,7 @@
 import { supabase } from '@/lib/supabase';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/_authenticated/dashboard')({
+export const Route = createFileRoute('/')({
   component: RouteComponent,
 });
 
@@ -13,7 +13,7 @@ function RouteComponent() {
         onClick={() => {
           supabase.auth.signOut();
           navigate({
-            to: '/login',
+            to: '/',
           });
         }}
       >

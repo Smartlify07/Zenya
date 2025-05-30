@@ -24,7 +24,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-export const Route = createFileRoute('/_authenticated/profile-setup')({
+export const Route = createFileRoute('/')({
   component: RouteComponent,
 });
 
@@ -74,7 +74,7 @@ function RouteComponent() {
       await router.invalidate();
 
       await navigate({
-        to: '/dashboard',
+        to: '/',
       });
     } catch (error) {
       console.error(error);

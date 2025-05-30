@@ -33,14 +33,14 @@ export default function Navbar() {
       <div className="flex items-center gap-4">
         <Button
           onClick={() => {
-            navigate({ to: '/signup' });
+            navigate({ to: '/' });
           }}
         >
           Sign Up
         </Button>
         <Button
           onClick={() => {
-            navigate({ to: '/login' });
+            navigate({ to: '/' });
           }}
           variant="outline"
         >

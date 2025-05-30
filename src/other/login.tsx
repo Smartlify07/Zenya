@@ -18,7 +18,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-export const Route = createFileRoute('/login')({
+export const Route = createFileRoute('/')({
   component: Login,
 });
 
@@ -50,7 +50,7 @@ function Login() {
         setLoading(false);
         toast.success('Logged in successfully');
         await router.invalidate();
-        await router.navigate({ to: '/dashboard' });
+        await router.navigate({ to: '/' });
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -167,7 +167,7 @@ function Login() {
         <div className="flex flex-col items-center gap-2">
           <p className="text-sm text-neutral-500">
             Don&apos;t have an account?{' '}
-            <Link to="/signup" className="text-primary hover:underline">
+            <Link to="/" className="text-primary hover:underline">
               Sign up
             </Link>
           </p>
