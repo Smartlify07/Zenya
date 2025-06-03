@@ -43,11 +43,12 @@ function HeroSection() {
       setLoading(true);
       const { error } = await joinWaitlist(values.email);
       if (error) {
+        if (error.code === '23505') {
+          toast.error("You've already joined the waitlist");
+        } else {
+          toast.error('An error occured while adding you to the waitlist.');
+        }
         console.error(error);
-        toast.error(
-          error.message ??
-            'An error occurred trying to join the waitlist, please try again'
-        );
       } else {
         toast.success(`You're in! We'll send early access details soon.`);
       }
@@ -96,10 +97,7 @@ function HeroSection() {
                 </FormItem>
               )}
             />{' '}
-            <Button
-              onClick={() => {}}
-              className="bg-primary w-full md:w-auto flex items-center gap-4 font-inter"
-            >
+            <Button className="bg-primary w-full md:w-auto flex items-center gap-4 font-inter">
               {loading && <AuthLoader />}
               Join the Waitlist
             </Button>

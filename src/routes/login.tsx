@@ -10,7 +10,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { signUp } from '@/lib/auth';
+import { login } from '@/lib/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
 import { useState } from 'react';
@@ -18,17 +18,15 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-export const Route = createFileRoute('/')({
-  component: Signup,
+export const Route = createFileRoute('/login')({
+  component: Login,
 });
 
-function Signup() {
+function Login() {
   const formSchema = z.object({
     email: z.string().min(2).max(50).email('Invalid email address'),
     password: z.string().min(8, 'Password must be at least 8 characters long'),
   });
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -36,33 +34,33 @@ function Signup() {
       password: '',
     },
   });
+  const [loading, setLoading] = useState(false);
+  // const [loadingGoogle, setLoadingGoogle] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = form.handleSubmit(async (data) => {
     try {
       setLoading(true);
-      const { user, error } = await signUp(data.email, data.password);
-
+      const { error, user } = await login(data.email, data.password);
       if (error) {
         setLoading(false);
         console.error('Supabase login error', error);
         toast.error(error.message ?? 'Login failed, please check try again');
       } else if (user) {
         setLoading(false);
-        toast.success('Signed up successfully');
-
+        toast.success('Logged in successfully');
         await router.invalidate();
         await router.navigate({ to: '/' });
       }
-      setLoading(false);
     } catch (error) {
-      console.error('Unexpected error', error);
+      console.error('Login error:', error);
       setLoading(false);
     }
   });
 
   return (
     <main className="flex items-center justify-center px-4 font-inter min-h-screen">
-      <div className="flex flex-col space-y-10 w-full md:max-w-sm md:min-w-sm items-center justify-center">
+      <div className="flex flex-col space-y-10 w-full sm:max-w-sm sm:min-w-sm items-center justify-center">
         <header className="flex flex-col items-center gap-1">
           <h1 className="text-neutral-800 flex items-center gap-3 text-xl text-center font-semibold">
             Welcome to Zenya <Logo />
@@ -76,14 +74,11 @@ function Signup() {
           <Button
             onClick={async () => {
               setLoadingGoogle(true);
-              setLoadingGoogle(false);
             }}
             variant={'outline'}
             className="rounded-sm flex items-center w-full justify-center"
           >
-            {loadingGoogle && (
-              <AuthLoader className="text-black animate-spin" fill="#000" />
-            )}
+            {loadingGoogle && <AuthLoader />}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               x="0px"
@@ -171,9 +166,9 @@ function Signup() {
 
         <div className="flex flex-col items-center gap-2">
           <p className="text-sm text-neutral-500">
-            Already have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link to="/" className="text-primary hover:underline">
-              Login
+              Sign up
             </Link>
           </p>
           <p className="text-sm text-center text-neutral-500">
@@ -195,4 +190,4 @@ function Signup() {
   );
 }
 
-export default Signup;
+export default Login;
