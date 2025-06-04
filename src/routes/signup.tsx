@@ -10,8 +10,9 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { signUp } from '@/lib/auth';
+import { googleAuth, signUp } from '@/lib/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Separator } from '@radix-ui/react-separator';
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -28,6 +29,7 @@ function Signup() {
     password: z.string().min(8, 'Password must be at least 8 characters long'),
   });
   const [loading, setLoading] = useState(false);
+  const [loadingGoogle, setLoadingGoogle] = useState(false);
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -60,6 +62,21 @@ function Signup() {
     }
   });
 
+  const handleGoogleAuth = async () => {
+    setLoadingGoogle(true);
+    try {
+      const { error } = await googleAuth();
+      if (error) {
+        console.error('Google auth error', error);
+        toast.error('Failed to sign in with Google, please try again.');
+        setLoadingGoogle(false);
+      }
+    } catch (error) {
+      console.error('Unexpected error during Google auth', error);
+      toast.error('An unexpected error occurred, please try again.');
+    }
+  };
+
   return (
     <main className="flex items-center justify-center px-4 font-inter min-h-screen">
       <div className="flex flex-col space-y-10 w-full md:max-w-sm md:min-w-sm items-center justify-center">
@@ -72,18 +89,13 @@ function Signup() {
           </p>
         </header>
 
-        {/* <div className="flex flex-col w-full gap-4">
+        <div className="flex flex-col w-full gap-4">
           <Button
-            onClick={async () => {
-              setLoadingGoogle(true);
-              setLoadingGoogle(false);
-            }}
+            onClick={handleGoogleAuth}
             variant={'outline'}
             className="rounded-sm flex items-center w-full justify-center"
           >
-            {loadingGoogle && (
-              <AuthLoader className="text-black animate-spin" fill="#000" />
-            )}
+            {loadingGoogle && <AuthLoader />}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               x="0px"
@@ -113,7 +125,7 @@ function Signup() {
           </Button>
 
           <Separator orientation="horizontal" className="h-1" />
-        </div> */}
+        </div>
 
         <div className="flex flex-col w-full gap-4">
           <Form {...form}>

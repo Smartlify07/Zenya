@@ -10,7 +10,8 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { login } from '@/lib/auth';
+import { Separator } from '@/components/ui/separator';
+import { googleAuth, login } from '@/lib/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
 import { useState } from 'react';
@@ -35,7 +36,7 @@ function Login() {
     },
   });
   const [loading, setLoading] = useState(false);
-  // const [loadingGoogle, setLoadingGoogle] = useState(false);
+  const [loadingGoogle, setLoadingGoogle] = useState(false);
   const router = useRouter();
 
   const handleSubmit = form.handleSubmit(async (data) => {
@@ -58,6 +59,22 @@ function Login() {
     }
   });
 
+  const handleGoogleAuth = async () => {
+    setLoadingGoogle(true);
+    try {
+      const { error } = await googleAuth();
+      if (error) {
+        console.error('Google auth error', error);
+        toast.error('Failed to sign in with Google, please try again.');
+      }
+    } catch (error) {
+      console.error('Unexpected error during Google auth', error);
+      toast.error('An unexpected error occurred, please try again.');
+    } finally {
+      setLoadingGoogle(false);
+    }
+  };
+
   return (
     <main className="flex items-center justify-center px-4 font-inter min-h-screen">
       <div className="flex flex-col space-y-10 w-full sm:max-w-sm sm:min-w-sm items-center justify-center">
@@ -70,11 +87,9 @@ function Login() {
           </p>
         </header>
 
-        {/* <div className="flex flex-col w-full gap-4">
+        <div className="flex flex-col w-full gap-4">
           <Button
-            onClick={async () => {
-              setLoadingGoogle(true);
-            }}
+            onClick={handleGoogleAuth}
             variant={'outline'}
             className="rounded-sm flex items-center w-full justify-center"
           >
@@ -108,7 +123,7 @@ function Login() {
           </Button>
 
           <Separator orientation="horizontal" className="h-1" />
-        </div> */}
+        </div>
 
         <div className="flex flex-col w-full gap-4">
           <Form {...form}>
