@@ -1,8 +1,11 @@
+import { AppSidebar } from '@/components/sidebar/app-sidebar';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+import { useAuth } from '@/context/auth-provider';
 import { supabase } from '@/lib/supabase';
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/_authenticated')({
-  component: RouteComponent,
+  component: AppLayout,
   beforeLoad: async () => {
     const {
       data: { session },
@@ -21,6 +24,14 @@ export const Route = createFileRoute('/_authenticated')({
   },
 });
 
-function RouteComponent() {
-  return <Outlet />;
+function AppLayout() {
+  const { user } = useAuth();
+  return (
+    <SidebarProvider>
+      <AppSidebar user={user} />
+      <SidebarInset>
+        <Outlet />
+      </SidebarInset>
+    </SidebarProvider>
+  );
 }
