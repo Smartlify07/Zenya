@@ -24,7 +24,7 @@ export function NavUser({ user }: { user: User | null }) {
   const { isMobile } = useSidebar();
   console.log('NavUser', user);
   return (
-    <SidebarMenu>
+    <SidebarMenu className="font-inter">
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
