@@ -1,6 +1,6 @@
 import type { Invoice } from '@/types';
 import { Card, CardContent, CardFooter, CardHeader } from '../ui/card';
-import { DollarSign, User } from 'lucide-react';
+import { User } from 'lucide-react';
 import {
   getClientDetailsFromId,
   getProjectDaysLeftColor,

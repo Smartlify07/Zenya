@@ -1,4 +1,4 @@
-import type { Client, Invoice } from '@/types';
+import type { Client } from '@/types';
 
 export const getProjectDaysLeftColor = (daysLeft: number) => {
   if (!daysLeft) return 'text-neutral-600 border border-neutral-200/30';
