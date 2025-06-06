@@ -15,7 +15,6 @@ import { Route as SignupImport } from './routes/signup'
 import { Route as LoginImport } from './routes/login'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as IndexImport } from './routes/index'
-import { Route as AuthenticatedProfileSetupImport } from './routes/_authenticated/profile-setup'
 import { Route as AuthenticatedProfileImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedDashboardImport } from './routes/_authenticated/dashboard'
 
@@ -42,12 +41,6 @@ const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
-} as any)
-
-const AuthenticatedProfileSetupRoute = AuthenticatedProfileSetupImport.update({
-  id: '/profile-setup',
-  path: '/profile-setup',
-  getParentRoute: () => AuthenticatedRoute,
 } as any)
 
 const AuthenticatedProfileRoute = AuthenticatedProfileImport.update({
@@ -108,13 +101,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfileImport
       parentRoute: typeof AuthenticatedImport
     }
-    '/_authenticated/profile-setup': {
-      id: '/_authenticated/profile-setup'
-      path: '/profile-setup'
-      fullPath: '/profile-setup'
-      preLoaderRoute: typeof AuthenticatedProfileSetupImport
-      parentRoute: typeof AuthenticatedImport
-    }
   }
 }
 
@@ -123,13 +109,11 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
-  AuthenticatedProfileSetupRoute: typeof AuthenticatedProfileSetupRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
-  AuthenticatedProfileSetupRoute: AuthenticatedProfileSetupRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
@@ -143,7 +127,6 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/profile': typeof AuthenticatedProfileRoute
-  '/profile-setup': typeof AuthenticatedProfileSetupRoute
 }
 
 export interface FileRoutesByTo {
@@ -153,7 +136,6 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/profile': typeof AuthenticatedProfileRoute
-  '/profile-setup': typeof AuthenticatedProfileSetupRoute
 }
 
 export interface FileRoutesById {
@@ -164,28 +146,13 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
-  '/_authenticated/profile-setup': typeof AuthenticatedProfileSetupRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | ''
-    | '/login'
-    | '/signup'
-    | '/dashboard'
-    | '/profile'
-    | '/profile-setup'
+  fullPaths: '/' | '' | '/login' | '/signup' | '/dashboard' | '/profile'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | ''
-    | '/login'
-    | '/signup'
-    | '/dashboard'
-    | '/profile'
-    | '/profile-setup'
+  to: '/' | '' | '/login' | '/signup' | '/dashboard' | '/profile'
   id:
     | '__root__'
     | '/'
@@ -194,7 +161,6 @@ export interface FileRouteTypes {
     | '/signup'
     | '/_authenticated/dashboard'
     | '/_authenticated/profile'
-    | '/_authenticated/profile-setup'
   fileRoutesById: FileRoutesById
 }
 
@@ -235,8 +201,7 @@ export const routeTree = rootRoute
       "filePath": "_authenticated.tsx",
       "children": [
         "/_authenticated/dashboard",
-        "/_authenticated/profile",
-        "/_authenticated/profile-setup"
+        "/_authenticated/profile"
       ]
     },
     "/login": {
@@ -251,10 +216,6 @@ export const routeTree = rootRoute
     },
     "/_authenticated/profile": {
       "filePath": "_authenticated/profile.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/profile-setup": {
-      "filePath": "_authenticated/profile-setup.tsx",
       "parent": "/_authenticated"
     }
   }

@@ -1,3 +1,4 @@
+import { TopNav } from '@/components/dashboard/top-nav';
 import { AppSidebar } from '@/components/sidebar/app-sidebar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { useAuth } from '@/context/auth-provider';
@@ -30,7 +31,10 @@ function AppLayout() {
     <SidebarProvider>
       <AppSidebar user={user} />
       <SidebarInset>
-        <Outlet />
+        <div className="flex flex-col gap-6 w-full">
+          <TopNav />
+          <Outlet />
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );
