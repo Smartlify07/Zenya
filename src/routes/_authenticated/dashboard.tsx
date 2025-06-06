@@ -16,7 +16,7 @@ export const Route = createFileRoute('/_authenticated/dashboard')({
 
 function Dashboard() {
   return (
-    <main className="flex flex-col font-inter px-4 items-center">
+    <main className="flex flex-col font-inter px-4 pb-5 items-center">
       <div className="max-w-[1440px] flex flex-col gap-10 w-full">
         <div className="grid gap-4 grid-cols-4 w-full">
           <SummaryCard title="Clients" value={clients.length} Icon={Users} />
