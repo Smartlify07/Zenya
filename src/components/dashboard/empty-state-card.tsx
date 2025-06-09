@@ -2,7 +2,7 @@ import {
   useSelectedQuickAction,
   type QuickAction,
 } from '@/context/selected-quick-action-provider';
-import { Button, buttonVariants } from '../ui/button';
+import { buttonVariants } from '../ui/button';
 import { Card, CardContent, CardHeader } from '../ui/card';
 import { DialogTrigger } from '../ui/dialog';
 
