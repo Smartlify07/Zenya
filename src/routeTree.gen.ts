@@ -17,6 +17,9 @@ import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as IndexImport } from './routes/index'
 import { Route as AuthenticatedProfileImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedDashboardImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedClientsIndexImport } from './routes/_authenticated/clients.index'
+import { Route as AuthenticatedClientsCreateImport } from './routes/_authenticated/clients.create'
+import { Route as AuthenticatedClientsClientidImport } from './routes/_authenticated/clients.$client_id'
 
 // Create/Update Routes
 
@@ -54,6 +57,27 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+
+const AuthenticatedClientsIndexRoute = AuthenticatedClientsIndexImport.update({
+  id: '/clients/',
+  path: '/clients/',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedClientsCreateRoute = AuthenticatedClientsCreateImport.update(
+  {
+    id: '/clients/create',
+    path: '/clients/create',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any,
+)
+
+const AuthenticatedClientsClientidRoute =
+  AuthenticatedClientsClientidImport.update({
+    id: '/clients/$client_id',
+    path: '/clients/$client_id',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -101,6 +125,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfileImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/_authenticated/clients/$client_id': {
+      id: '/_authenticated/clients/$client_id'
+      path: '/clients/$client_id'
+      fullPath: '/clients/$client_id'
+      preLoaderRoute: typeof AuthenticatedClientsClientidImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/clients/create': {
+      id: '/_authenticated/clients/create'
+      path: '/clients/create'
+      fullPath: '/clients/create'
+      preLoaderRoute: typeof AuthenticatedClientsCreateImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/clients/': {
+      id: '/_authenticated/clients/'
+      path: '/clients'
+      fullPath: '/clients'
+      preLoaderRoute: typeof AuthenticatedClientsIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
   }
 }
 
@@ -109,11 +154,17 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedClientsClientidRoute: typeof AuthenticatedClientsClientidRoute
+  AuthenticatedClientsCreateRoute: typeof AuthenticatedClientsCreateRoute
+  AuthenticatedClientsIndexRoute: typeof AuthenticatedClientsIndexRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedClientsClientidRoute: AuthenticatedClientsClientidRoute,
+  AuthenticatedClientsCreateRoute: AuthenticatedClientsCreateRoute,
+  AuthenticatedClientsIndexRoute: AuthenticatedClientsIndexRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
@@ -127,6 +178,9 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/clients/$client_id': typeof AuthenticatedClientsClientidRoute
+  '/clients/create': typeof AuthenticatedClientsCreateRoute
+  '/clients': typeof AuthenticatedClientsIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -136,6 +190,9 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/clients/$client_id': typeof AuthenticatedClientsClientidRoute
+  '/clients/create': typeof AuthenticatedClientsCreateRoute
+  '/clients': typeof AuthenticatedClientsIndexRoute
 }
 
 export interface FileRoutesById {
@@ -146,13 +203,34 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/clients/$client_id': typeof AuthenticatedClientsClientidRoute
+  '/_authenticated/clients/create': typeof AuthenticatedClientsCreateRoute
+  '/_authenticated/clients/': typeof AuthenticatedClientsIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '' | '/login' | '/signup' | '/dashboard' | '/profile'
+  fullPaths:
+    | '/'
+    | ''
+    | '/login'
+    | '/signup'
+    | '/dashboard'
+    | '/profile'
+    | '/clients/$client_id'
+    | '/clients/create'
+    | '/clients'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '' | '/login' | '/signup' | '/dashboard' | '/profile'
+  to:
+    | '/'
+    | ''
+    | '/login'
+    | '/signup'
+    | '/dashboard'
+    | '/profile'
+    | '/clients/$client_id'
+    | '/clients/create'
+    | '/clients'
   id:
     | '__root__'
     | '/'
@@ -161,6 +239,9 @@ export interface FileRouteTypes {
     | '/signup'
     | '/_authenticated/dashboard'
     | '/_authenticated/profile'
+    | '/_authenticated/clients/$client_id'
+    | '/_authenticated/clients/create'
+    | '/_authenticated/clients/'
   fileRoutesById: FileRoutesById
 }
 
@@ -201,7 +282,10 @@ export const routeTree = rootRoute
       "filePath": "_authenticated.tsx",
       "children": [
         "/_authenticated/dashboard",
-        "/_authenticated/profile"
+        "/_authenticated/profile",
+        "/_authenticated/clients/$client_id",
+        "/_authenticated/clients/create",
+        "/_authenticated/clients/"
       ]
     },
     "/login": {
@@ -216,6 +300,18 @@ export const routeTree = rootRoute
     },
     "/_authenticated/profile": {
       "filePath": "_authenticated/profile.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/clients/$client_id": {
+      "filePath": "_authenticated/clients.$client_id.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/clients/create": {
+      "filePath": "_authenticated/clients.create.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/clients/": {
+      "filePath": "_authenticated/clients.index.tsx",
       "parent": "/_authenticated"
     }
   }
