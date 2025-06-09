@@ -4,15 +4,41 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Building2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
+import { EmptyStateCard } from './empty-state-card';
+import { buttonVariants } from '../ui/button';
+import { useSelectedQuickAction } from '@/context/selected-quick-action-provider';
+import { DialogTrigger } from '@radix-ui/react-dialog';
 
 export const RecentClients = ({ clients }: { clients: Client[] }) => {
+  const { setSelectedQuickAction, setShowDialog } = useSelectedQuickAction();
   return (
     <section className="w-full md:w-6/12 flex flex-col gap-4">
-      <h1 className="text-lg font-medium text-primary">Recent Clients</h1>
+      <div className="flex items-center w-full justify-between">
+        <h1 className="text-lg font-medium text-primary">Recent Clients</h1>
 
+        <DialogTrigger
+          className={buttonVariants({
+            variant: 'outline',
+          })}
+          onClick={() => {
+            setSelectedQuickAction('client');
+            setShowDialog(true);
+          }}
+        >
+          Add client
+        </DialogTrigger>
+      </div>
+
+      {clients.length === 0 && (
+        <EmptyStateCard
+          quickAction={'client'}
+          title="No client data available"
+          buttonText="Add your first client"
+        />
+      )}
       <div className="grid gap-4">
         {clients.slice(0, 6).map((client) => (
-          <RecentClientsCard {...client} />
+          <RecentClientsCard key={client?.id} {...client} />
         ))}
       </div>
     </section>

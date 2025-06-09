@@ -2,21 +2,26 @@ import type { Invoice } from '@/types';
 import { Card, CardContent, CardFooter, CardHeader } from '../ui/card';
 import { User } from 'lucide-react';
 import {
-  getClientDetailsFromId,
   getProjectDaysLeftColor,
   getProjectsDaysLeftText,
 } from '@/lib/utils/dashboardUtils';
-import { clients } from '@/lib/data/clients';
 import { getRemainingDays } from '@/lib/utils/dateUtils';
 import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
+import { EmptyStateCard } from './empty-state-card';
 
 export const RecentInvoices = ({ invoices }: { invoices: Invoice[] }) => {
   return (
     <section className="w-full md:w-6/12 flex flex-col gap-4">
       <h1 className="text-lg font-medium text-primary">Recent Invoices</h1>
-
+      {invoices.length === 0 && (
+        <EmptyStateCard
+          quickAction={'invoice'}
+          title="No invoices available"
+          buttonText="Add your first invoice"
+        />
+      )}
       <div className="grid gap-4">
         {invoices.slice(0, 4).map((invoice) => (
           <RecentInvoicesCard invoice={invoice} />
@@ -42,9 +47,7 @@ export const RecentInvoicesCard = ({ invoice }: { invoice: Invoice }) => {
 
         <div className="flex items-center gap-2">
           <User size={16} className="text-neutral-600" />
-          <p className="text-sm text-neutral-700 truncate">
-            {getClientDetailsFromId(invoice.client_id as string, clients)?.name}
-          </p>
+          <p className="text-sm text-neutral-700 truncate"></p>
         </div>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
