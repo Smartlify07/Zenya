@@ -22,7 +22,6 @@ import type { User } from '@supabase/supabase-js';
 
 export function NavUser({ user }: { user: User | null }) {
   const { isMobile } = useSidebar();
-  console.log('NavUser', user);
   return (
     <SidebarMenu className="font-inter">
       <SidebarMenuItem>

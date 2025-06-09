@@ -1,4 +1,10 @@
-export type Income = {
+export type BaseType = {
+  id: string | number; // Allow both number and string for id
+  created_at?: string;
+  updated_at?: string;
+};
+
+export type Income = BaseType & {
   amount: number;
   category: string;
   notes?: string;
@@ -6,53 +12,53 @@ export type Income = {
   id: string;
   source?: string;
 };
-export type Expense = {
+export type Expense = BaseType & {
   amount: number;
   category: string;
   notes?: string;
   date: string;
   id: string;
   payee?: string;
-  createdAt?: string;
 };
 
-export type Client = {
-  id: string | number; // Changed to allow both string and number for flexibility
+export type Client = BaseType & {
+  id: string | number;
   name: string;
   email: string;
-  phone: string;
+  phone?: string;
   company?: string;
   avatar?: string;
-  status: 'active' | 'inactive'; // Added status field
+  lead_source?: string;
+  notes?: string;
+  status: 'active' | 'inactive';
 };
 
-export type Milestone = {
+export type Milestone = BaseType & {
   title: string;
   description: string;
   due_date: string;
 };
 
-export type Project = {
+export type Project = BaseType & {
   name: string;
   description: string;
-  status: 'active' | 'completed' | 'on hold';
+  status: 'active' | 'completed' | 'on_hold';
   client_id: string;
-  milestones: Milestone[];
+  milestones: Milestone[] | null;
+  start_date: Date;
+  end_date: Date;
 };
 
-export type Task = {
+export type Task = BaseType & {
   name: string;
-  description: string;
+  description?: string;
   due_date: string;
   client_id: string;
   project_id: string;
-  user_id: string;
-  completed: boolean;
   status: 'todo' | 'in_progress' | 'completed';
-  id: string;
 };
 
-export type Invoice = {
+export type Invoice = BaseType & {
   id: string;
   client_id: number | string; // Allow both number and string for client_id
   user_id: string;

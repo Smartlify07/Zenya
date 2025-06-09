@@ -2,6 +2,7 @@ import { TopNav } from '@/components/dashboard/top-nav';
 import { AppSidebar } from '@/components/sidebar/app-sidebar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { useAuth } from '@/context/auth-provider';
+import { SelectedQuickActionProvider } from '@/context/selected-quick-action-provider';
 import { supabase } from '@/lib/supabase';
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
 
@@ -14,8 +15,6 @@ export const Route = createFileRoute('/_authenticated')({
     } = await supabase.auth.getSession();
 
     if (!session?.user) {
-      console.log(true);
-      console.log(session);
       throw redirect({ to: '/' });
     }
 
@@ -33,7 +32,9 @@ function AppLayout() {
       <SidebarInset>
         <div className="flex flex-col gap-6 w-full">
           <TopNav />
-          <Outlet />
+          <SelectedQuickActionProvider>
+            <Outlet />
+          </SelectedQuickActionProvider>
         </div>
       </SidebarInset>
     </SidebarProvider>
