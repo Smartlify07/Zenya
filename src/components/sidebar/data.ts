@@ -1,10 +1,4 @@
-import {
-  CheckCircle,
-  FolderKanban,
-  LayoutDashboard,
-  Receipt,
-  Users,
-} from 'lucide-react';
+import { FolderKanban, LayoutDashboard, Receipt, Users } from 'lucide-react';
 
 export const data = {
   navMain: [
