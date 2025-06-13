@@ -1,10 +1,4 @@
-import {
-  CheckCircle,
-  FolderKanban,
-  LayoutDashboard,
-  Receipt,
-  Users,
-} from 'lucide-react';
+import { FolderKanban, LayoutDashboard, Receipt, Users } from 'lucide-react';
 
 export const data = {
   navMain: [
@@ -23,11 +17,7 @@ export const data = {
       url: '/projects',
       icon: FolderKanban,
     },
-    {
-      title: 'Tasks',
-      url: '/tasks',
-      icon: CheckCircle,
-    },
+
     {
       title: 'Invoices',
       url: '/invoices',

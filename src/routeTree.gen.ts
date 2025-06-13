@@ -17,7 +17,9 @@ import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as IndexImport } from './routes/index'
 import { Route as AuthenticatedProfileImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedDashboardImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedProjectsIndexImport } from './routes/_authenticated/projects.index'
 import { Route as AuthenticatedClientsIndexImport } from './routes/_authenticated/clients.index'
+import { Route as AuthenticatedProjectsCreateImport } from './routes/_authenticated/projects.create'
 import { Route as AuthenticatedClientsCreateImport } from './routes/_authenticated/clients.create'
 import { Route as AuthenticatedClientsClientidImport } from './routes/_authenticated/clients.$client_id'
 
@@ -58,11 +60,26 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardImport.update({
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 
+const AuthenticatedProjectsIndexRoute = AuthenticatedProjectsIndexImport.update(
+  {
+    id: '/projects/',
+    path: '/projects/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any,
+)
+
 const AuthenticatedClientsIndexRoute = AuthenticatedClientsIndexImport.update({
   id: '/clients/',
   path: '/clients/',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+
+const AuthenticatedProjectsCreateRoute =
+  AuthenticatedProjectsCreateImport.update({
+    id: '/projects/create',
+    path: '/projects/create',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 const AuthenticatedClientsCreateRoute = AuthenticatedClientsCreateImport.update(
   {
@@ -139,11 +156,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedClientsCreateImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/_authenticated/projects/create': {
+      id: '/_authenticated/projects/create'
+      path: '/projects/create'
+      fullPath: '/projects/create'
+      preLoaderRoute: typeof AuthenticatedProjectsCreateImport
+      parentRoute: typeof AuthenticatedImport
+    }
     '/_authenticated/clients/': {
       id: '/_authenticated/clients/'
       path: '/clients'
       fullPath: '/clients'
       preLoaderRoute: typeof AuthenticatedClientsIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/projects/': {
+      id: '/_authenticated/projects/'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof AuthenticatedProjectsIndexImport
       parentRoute: typeof AuthenticatedImport
     }
   }
@@ -156,7 +187,9 @@ interface AuthenticatedRouteChildren {
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedClientsClientidRoute: typeof AuthenticatedClientsClientidRoute
   AuthenticatedClientsCreateRoute: typeof AuthenticatedClientsCreateRoute
+  AuthenticatedProjectsCreateRoute: typeof AuthenticatedProjectsCreateRoute
   AuthenticatedClientsIndexRoute: typeof AuthenticatedClientsIndexRoute
+  AuthenticatedProjectsIndexRoute: typeof AuthenticatedProjectsIndexRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
@@ -164,7 +197,9 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedClientsClientidRoute: AuthenticatedClientsClientidRoute,
   AuthenticatedClientsCreateRoute: AuthenticatedClientsCreateRoute,
+  AuthenticatedProjectsCreateRoute: AuthenticatedProjectsCreateRoute,
   AuthenticatedClientsIndexRoute: AuthenticatedClientsIndexRoute,
+  AuthenticatedProjectsIndexRoute: AuthenticatedProjectsIndexRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
@@ -180,7 +215,9 @@ export interface FileRoutesByFullPath {
   '/profile': typeof AuthenticatedProfileRoute
   '/clients/$client_id': typeof AuthenticatedClientsClientidRoute
   '/clients/create': typeof AuthenticatedClientsCreateRoute
+  '/projects/create': typeof AuthenticatedProjectsCreateRoute
   '/clients': typeof AuthenticatedClientsIndexRoute
+  '/projects': typeof AuthenticatedProjectsIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -192,7 +229,9 @@ export interface FileRoutesByTo {
   '/profile': typeof AuthenticatedProfileRoute
   '/clients/$client_id': typeof AuthenticatedClientsClientidRoute
   '/clients/create': typeof AuthenticatedClientsCreateRoute
+  '/projects/create': typeof AuthenticatedProjectsCreateRoute
   '/clients': typeof AuthenticatedClientsIndexRoute
+  '/projects': typeof AuthenticatedProjectsIndexRoute
 }
 
 export interface FileRoutesById {
@@ -205,7 +244,9 @@ export interface FileRoutesById {
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/clients/$client_id': typeof AuthenticatedClientsClientidRoute
   '/_authenticated/clients/create': typeof AuthenticatedClientsCreateRoute
+  '/_authenticated/projects/create': typeof AuthenticatedProjectsCreateRoute
   '/_authenticated/clients/': typeof AuthenticatedClientsIndexRoute
+  '/_authenticated/projects/': typeof AuthenticatedProjectsIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -219,7 +260,9 @@ export interface FileRouteTypes {
     | '/profile'
     | '/clients/$client_id'
     | '/clients/create'
+    | '/projects/create'
     | '/clients'
+    | '/projects'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -230,7 +273,9 @@ export interface FileRouteTypes {
     | '/profile'
     | '/clients/$client_id'
     | '/clients/create'
+    | '/projects/create'
     | '/clients'
+    | '/projects'
   id:
     | '__root__'
     | '/'
@@ -241,7 +286,9 @@ export interface FileRouteTypes {
     | '/_authenticated/profile'
     | '/_authenticated/clients/$client_id'
     | '/_authenticated/clients/create'
+    | '/_authenticated/projects/create'
     | '/_authenticated/clients/'
+    | '/_authenticated/projects/'
   fileRoutesById: FileRoutesById
 }
 
@@ -285,7 +332,9 @@ export const routeTree = rootRoute
         "/_authenticated/profile",
         "/_authenticated/clients/$client_id",
         "/_authenticated/clients/create",
-        "/_authenticated/clients/"
+        "/_authenticated/projects/create",
+        "/_authenticated/clients/",
+        "/_authenticated/projects/"
       ]
     },
     "/login": {
@@ -310,8 +359,16 @@ export const routeTree = rootRoute
       "filePath": "_authenticated/clients.create.tsx",
       "parent": "/_authenticated"
     },
+    "/_authenticated/projects/create": {
+      "filePath": "_authenticated/projects.create.tsx",
+      "parent": "/_authenticated"
+    },
     "/_authenticated/clients/": {
       "filePath": "_authenticated/clients.index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/projects/": {
+      "filePath": "_authenticated/projects.index.tsx",
       "parent": "/_authenticated"
     }
   }

@@ -23,7 +23,6 @@ export const ClientsTable = ({ clients }: { clients: Client[] }) => {
           <TableHead className={tableHeadClassName}>Client Names</TableHead>
           <TableHead className={tableHeadClassName}>Contact Email</TableHead>
           <TableHead className={tableHeadClassName}>Company Name</TableHead>
-          <TableHead className={tableHeadClassName}>Active Projects</TableHead>
           <TableHead className={tableHeadClassName}>Client Notes</TableHead>
           <TableHead className={tableHeadClassName}>Client Status</TableHead>
         </TableRow>
@@ -40,7 +39,6 @@ export const ClientsTable = ({ clients }: { clients: Client[] }) => {
             </TableCell>
             <TableCell>{client.email}</TableCell>
             <TableCell>{client.company}</TableCell>
-            <TableCell></TableCell>
             <TableCell className="truncate">{client.notes}</TableCell>
             <TableCell className={'flex justify-center items-center'}>
               <Badge
