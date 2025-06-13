@@ -23,6 +23,8 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import { Button } from '../ui/button';
+import { format } from 'date-fns';
+import { useNavigate } from '@tanstack/react-router';
 
 export const ProjectsTable = ({
   projects,
@@ -32,7 +34,7 @@ export const ProjectsTable = ({
   user_id: User['id'];
 }) => {
   const tableHeadClassName = 'text-neutral-600 font-normal text-sm';
-
+  const router = useNavigate();
   const clientIds = Array.from(
     new Set(projects.map((project) => project.client_id).filter(Boolean))
   );
@@ -61,7 +63,7 @@ export const ProjectsTable = ({
           <TableHead className={tableHeadClassName}>Project Names</TableHead>
           <TableHead className={tableHeadClassName}>Client</TableHead>
           <TableHead className={tableHeadClassName}>Project Status</TableHead>
-          <TableHead className={tableHeadClassName}>Next Due Date</TableHead>
+          <TableHead className={tableHeadClassName}>Due Date</TableHead>
           <TableHead className={tableHeadClassName}>Invoice Status</TableHead>
           <TableHead className={tableHeadClassName}></TableHead>
         </TableRow>
@@ -86,7 +88,7 @@ export const ProjectsTable = ({
                 {project.status}
               </Badge>
             </TableCell>
-            <TableCell>13/06/2025</TableCell>
+            <TableCell>{format(project.end_date, 'PPP')}</TableCell>
             <TableCell>Not paid</TableCell>
             <TableCell>
               <DropdownMenu>
@@ -99,8 +101,13 @@ export const ProjectsTable = ({
                 <DropdownMenuContent className="font-inter" align="end">
                   <DropdownMenuLabel>Actions</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>Add Task</DropdownMenuItem>
-                  <DropdownMenuItem>Edit Project</DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      router({ to: `/projects/$${project.id}` });
+                    }}
+                  >
+                    Edit Project
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </TableCell>

@@ -23,11 +23,7 @@ export const data = {
       url: '/projects',
       icon: FolderKanban,
     },
-    {
-      title: 'Tasks',
-      url: '/tasks',
-      icon: CheckCircle,
-    },
+
     {
       title: 'Invoices',
       url: '/invoices',
