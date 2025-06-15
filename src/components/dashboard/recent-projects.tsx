@@ -9,9 +9,6 @@ import { EmptyStateCard } from './empty-state-card';
 import { DialogTrigger } from '../ui/dialog';
 import { useSelectedQuickAction } from '@/context/selected-quick-action-provider';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
-import { useQuery } from '@tanstack/react-query';
-import { fetchClientById } from '@/api/supabase/clients';
-import { Skeleton } from '../ui/skeleton';
 
 export const RecentProjects = ({
   projects,
@@ -61,19 +58,11 @@ export const RecentProjects = ({
 export const RecentProjectsCard = ({
   name,
   status,
+  clients,
   milestones,
-  user_id,
-  client_id,
 }: Project & {
   user_id: SupabaseUser['id'] | undefined;
 }) => {
-  const client = useQuery({
-    queryKey: ['clients', client_id],
-    queryFn: async () => {
-      return await fetchClientById(client_id, user_id!);
-    },
-  });
-
   return (
     <Card className="shadow-2xs flex flex-col px-4 gap-4">
       <div className="flex items-center justify-between">
@@ -81,17 +70,8 @@ export const RecentProjectsCard = ({
           <h1 className="text-base font-medium text-primary">{name}</h1>
           <div className="flex items-center gap-1">
             <User size={16} className="text-neutral-400" />
-            {client.isLoading ? (
-              <Skeleton className="h-4 w-24" />
-            ) : client.isError ? (
-              <h3 className="text-sm text-neutral-400 italic">
-                Client unavailable
-              </h3>
-            ) : (
-              <h3 className="text-sm text-neutral-600">
-                {client?.data?.data?.name}
-              </h3>
-            )}
+
+            <h3 className="text-sm text-neutral-600">{clients?.name}</h3>
           </div>
         </div>
         <Badge

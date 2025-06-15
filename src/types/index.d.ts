@@ -47,6 +47,8 @@ export type Project = BaseType & {
   milestones: Milestone[] | null;
   start_date: Date;
   end_date: Date;
+  clients: Client;
+  tasks: Task[];
 };
 
 export type Task = BaseType & {
@@ -56,6 +58,8 @@ export type Task = BaseType & {
   client_id: string;
   project_id: string;
   status: 'todo' | 'in_progress' | 'completed';
+  clients: Client;
+  projects: Project;
 };
 
 export type Invoice = BaseType & {
@@ -67,4 +71,9 @@ export type Invoice = BaseType & {
   status: 'paid' | 'unpaid' | 'overdue';
   notes?: string;
   createdAt?: string;
+};
+
+export type SupabaseFetchResult<T> = {
+  data: T | null;
+  error: PostgrestResponse<Task>['error'];
 };

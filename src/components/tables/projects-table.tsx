@@ -1,4 +1,4 @@
-import type { Client, Project } from '@/types';
+import type { Project } from '@/types';
 import {
   Table,
   TableBody,
@@ -10,8 +10,6 @@ import {
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
-import { useQuery } from '@tanstack/react-query';
-import { fetchClientsByIds } from '@/api/supabase/clients';
 import type { User } from '@supabase/supabase-js';
 import { MoreHorizontal } from 'lucide-react';
 import {
@@ -28,32 +26,12 @@ import { useNavigate } from '@tanstack/react-router';
 
 export const ProjectsTable = ({
   projects,
-  user_id,
 }: {
   projects: Project[];
   user_id: User['id'];
 }) => {
   const tableHeadClassName = 'text-neutral-600 font-normal text-sm';
   const router = useNavigate();
-  const clientIds = Array.from(
-    new Set(projects.map((project) => project.client_id).filter(Boolean))
-  );
-
-  const { data: clientsData } = useQuery({
-    queryKey: ['clients', clientIds, user_id],
-    queryFn: async () => {
-      if (!user_id || clientIds.length === 0) return [];
-
-      const { data, error } = await fetchClientsByIds(clientIds, user_id);
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!user_id && clientIds.length > 0,
-  });
-
-  const clientsMap = new Map<string, Client>(
-    clientsData?.map((client) => [client.id as string, client]) || []
-  );
 
   return (
     <Table>
@@ -74,7 +52,7 @@ export const ProjectsTable = ({
             <TableCell>
               <h1>{project.name}</h1>
             </TableCell>
-            <TableCell>{clientsMap.get(project?.client_id)?.name}</TableCell>
+            <TableCell>{project.clients?.name}</TableCell>
             <TableCell className={'flex justify-start items-center'}>
               <Badge
                 className={cn(

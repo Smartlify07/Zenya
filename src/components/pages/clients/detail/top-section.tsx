@@ -5,7 +5,12 @@ import { cn } from '@/lib/utils';
 import type { Client } from '@/types';
 import { Building2 } from 'lucide-react';
 
-export const TopSection = ({ client }: { client: Client | undefined }) => {
+export const TopSection = ({
+  client,
+}: {
+  client: Client | undefined | null;
+}) => {
+  console.log(client);
   return (
     <section className="border-r font-inter flex flex-col gap-4">
       <header className="flex w-full py-5 h-[150px] relative bg-linear-to-tr from-neutral-50 to-neutral-100 items-center gap-4">
