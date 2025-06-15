@@ -1,32 +1,39 @@
 import { supabase } from '@/lib/supabase';
-import type { Client } from '@/types';
+import type { Client, SupabaseFetchResult } from '@/types';
 import type { PostgrestResponse, User } from '@supabase/supabase-js';
+import { fetchData } from './call-api';
 
-export const fetchClients = async (): Promise<{
-  data: Client[];
-  error: PostgrestResponse<Client>['error'];
-}> => {
-  const { data, error } = await supabase
-    .from('clients')
-    .select('*')
-    .order('created_at', { ascending: false });
-  return { data: data as Client[], error };
+export const fetchClients = async (
+  user_id: string
+): Promise<SupabaseFetchResult<Client[]>> => {
+  return fetchData({
+    table: 'clients',
+    joins: ['tasks', 'projects'],
+    filters: {
+      user_id,
+    },
+    single: false,
+    order: true,
+  });
 };
 
 export const fetchClientById = async (
   id: string,
   user_id: string
-): Promise<{
-  data: Client;
-  error: PostgrestResponse<Client>['error'];
-}> => {
-  const { data, error } = await supabase
-    .from('clients')
-    .select('*')
-    .eq('id', id)
-    .eq('user_id', user_id)
-    .single();
-  return { data: data as Client, error };
+): Promise<SupabaseFetchResult<Client>> => {
+  if (!id) {
+    return { data: null, error: 'No client found with the specified id' };
+  }
+  return fetchData({
+    table: 'clients',
+    joins: ['tasks', 'projects'],
+    filters: {
+      user_id,
+      id,
+    },
+    single: true,
+    order: true,
+  });
 };
 
 export const fetchClientsByIds = async (

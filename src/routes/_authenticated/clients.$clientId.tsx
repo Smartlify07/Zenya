@@ -1,6 +1,6 @@
 import { fetchClientById } from '@/api/supabase/clients';
-import { fetchProjectsForClient } from '@/api/supabase/projects';
-import { fetchTasksWithRelatedProject } from '@/api/supabase/tasks';
+import { fetchProjects } from '@/api/supabase/projects';
+import { fetchTasks } from '@/api/supabase/tasks';
 import { ProjectsSection } from '@/components/pages/clients/detail/projects-section';
 import { TasksSection } from '@/components/pages/clients/detail/tasks-section';
 import { TopSection } from '@/components/pages/clients/detail/top-section';
@@ -27,12 +27,13 @@ function ClientDetails() {
 
   const projects = useQuery({
     queryKey: ['projects', clientId],
-    queryFn: async () => fetchProjectsForClient(clientId, user?.id!),
+    queryFn: async () => fetchProjects(user?.id!, clientId),
   });
 
   const tasks = useQuery({
     queryKey: ['tasks', clientId],
-    queryFn: async () => fetchTasksWithRelatedProject(clientId, user?.id!),
+
+    queryFn: async () => fetchTasks(user?.id!, clientId),
   });
 
   if (client.isLoading) {

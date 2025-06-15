@@ -1,55 +1,37 @@
 import { supabase } from '@/lib/supabase';
-import type { Client, Project, Task } from '@/types';
+import type { Client, Project, SupabaseFetchResult, Task } from '@/types';
 import type { PostgrestResponse, User } from '@supabase/supabase-js';
+import { fetchData } from './call-api';
 
 export type TaskWithProject = Task & {
   projects: Project;
 };
-export const fetchTasks = async () => {
-  const { data, error } = await supabase.from('tasks').select('*');
 
-  return { data, error };
-};
-
-export const fetchTasksForClient = async (
-  client_id: string,
-  user_id: string
-): Promise<{
+export type FetchResult = {
   data: Task[] | null;
   error: PostgrestResponse<Task>['error'];
-}> => {
-  const { data, error } = await supabase
-    .from('tasks')
-    .select('*')
-    .eq('client_id', client_id)
-    .eq('user_id', user_id);
-
-  if (error) {
-    console.error('Error fetching projects by IDs:', error);
-    return { data: null, error };
-  }
-
-  return { data: data as Task[], error: null };
 };
 
-export const fetchTasksWithRelatedProject = async (
-  client_id: string,
-  user_id: string
-) => {
-  const { data, error } = await supabase
-    .from('tasks')
-    .select(`*, projects(*)`)
-    .eq('user_id', user_id)
-    .eq('client_id', client_id);
-  if (error) {
-    console.error('Error fetching projects by IDs:', error);
-    return { data: null, error };
-  }
-
-  return {
-    data: data as TaskWithProject[],
-    error: null,
+export const fetchTasks = async (
+  user_id: string,
+  client_id?: string
+): Promise<SupabaseFetchResult<Task[]>> => {
+  let filters: {
+    user_id: string;
+    client_id?: string;
+  } = {
+    user_id,
   };
+  if (client_id) {
+    filters = { ...filters, client_id };
+  }
+  return fetchData({
+    table: 'tasks',
+    joins: ['projects', 'clients'],
+    filters,
+    single: false,
+    order: true,
+  });
 };
 
 export const updateTask = async (

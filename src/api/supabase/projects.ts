@@ -1,65 +1,43 @@
 import { supabase } from '@/lib/supabase';
-import type { Project } from '@/types';
-import type { PostgrestResponse, User } from '@supabase/supabase-js';
+import type { Project, SupabaseFetchResult } from '@/types';
+import type { User } from '@supabase/supabase-js';
+import { fetchData } from './call-api';
 
-export const fetchProjects = async () => {
-  const { data, error } = await supabase
-    .from('projects')
-    .select('*')
-    .order('created_at', { ascending: false });
-  return { data, error };
-};
-
-export const fetchProjectById = async (id: string, user_id: string) => {
-  const { data, error } = await supabase
-    .from('projects')
-    .select('*')
-    .eq('id', id)
-    .eq('user_id', user_id)
-    .single();
-  return { data, error };
-};
-
-export const fetchProjectsByIds = async (
-  projectIds: string[],
-  user_id: string
-): Promise<{
-  data: Project[] | null;
-  error: PostgrestResponse<Project>['error'];
-}> => {
-  const { data, error } = await supabase
-    .from('projects')
-    .select('*')
-    .in('id', projectIds)
-    .eq('user_id', user_id);
-
-  if (error) {
-    console.error('Error fetching projects by IDs:', error);
-    return { data: null, error };
+export const fetchProjects = async (
+  user_id: string,
+  client_id?: string
+): Promise<SupabaseFetchResult<Project[]>> => {
+  let filters: {
+    user_id: string;
+    client_id?: string;
+  } = {
+    user_id,
+  };
+  if (client_id) {
+    filters = { ...filters, client_id };
   }
-
-  return { data: data as Project[], error: null };
+  return fetchData({
+    table: 'projects',
+    joins: ['tasks', 'clients'],
+    filters,
+    single: false,
+    order: true,
+  });
 };
 
-export const fetchProjectsForClient = async (
-  client_id: string,
+export const fetchProjectById = async (
+  id: string,
   user_id: string
-): Promise<{
-  data: Project[] | null;
-  error: PostgrestResponse<Project>['error'];
-}> => {
-  const { data, error } = await supabase
-    .from('projects')
-    .select('*')
-    .eq('client_id', client_id)
-    .eq('user_id', user_id);
-
-  if (error) {
-    console.error('Error fetching projects by IDs:', error);
-    return { data: null, error };
-  }
-
-  return { data: data as Project[], error: null };
+): Promise<SupabaseFetchResult<Project>> => {
+  return await fetchData({
+    table: 'projects',
+    joins: ['tasks', 'clients'],
+    filters: {
+      user_id,
+      id,
+    },
+    single: true,
+  });
 };
 
 export const createProject = async (

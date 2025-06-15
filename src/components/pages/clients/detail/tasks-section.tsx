@@ -1,4 +1,3 @@
-import type { TaskWithProject } from '@/api/supabase/tasks';
 import { TaskStatusPopover } from '@/components/dashboard/task-status-popover';
 import { TaskForm } from '@/components/forms/task-form';
 import { Badge } from '@/components/ui/badge';
@@ -8,13 +7,14 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { getProjectDaysLeftColor } from '@/lib/utils/dashboardUtils';
 import { getRemainingDays } from '@/lib/utils/dateUtils';
+import type { Task } from '@/types';
 import { Calendar, FolderKanban, Notebook, Plus } from 'lucide-react';
 
 export const TasksSection = ({
   tasks,
   user_id,
 }: {
-  tasks: TaskWithProject[] | undefined;
+  tasks: Task[] | undefined;
   user_id: string;
 }) => {
   return (
@@ -60,7 +60,7 @@ export const TasksSection = ({
                   />
                   <div className="flex items-center gap-1">
                     <FolderKanban size={16} className="text-neutral-600" />
-                    <Badge variant={'secondary'}>{task.projects.name}</Badge>
+                    <Badge variant={'secondary'}>{task?.projects?.name}</Badge>
                   </div>
                 </div>
               </div>
