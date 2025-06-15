@@ -153,7 +153,7 @@ const TaskCard = ({
           <Calendar size={16} /> Due in {getRemainingDays(task?.due_date)} days
         </Badge>
 
-        <TaskStatusPopover status={task?.status} />
+        <TaskStatusPopover client_id={''} task_id={''} status={task?.status} />
       </CardFooter>
     </Card>
   );
