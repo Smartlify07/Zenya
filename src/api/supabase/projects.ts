@@ -1,7 +1,6 @@
-import { supabase } from '@/lib/supabase';
 import type { Project, SupabaseFetchResult } from '@/types';
 import type { User } from '@supabase/supabase-js';
-import { fetchData } from './call-api';
+import { createData, fetchData } from './call-api';
 
 export const fetchProjects = async (
   user_id: string,
@@ -41,16 +40,8 @@ export const fetchProjectById = async (
 };
 
 export const createProject = async (
-  projectData: Omit<Project, 'id' | 'milestones'>,
+  projectData: Omit<Project, 'id' | 'milestones' | 'tasks' | 'clients'>,
   user_id: User['id']
 ) => {
-  const { data, error } = await supabase
-    .from('projects')
-    .insert({ ...projectData, user_id });
-
-  if (error) {
-    console.error(error);
-    throw error;
-  }
-  return { data, error };
+  return createData('projects', projectData, user_id);
 };

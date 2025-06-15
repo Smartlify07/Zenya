@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase';
 import type { SupabaseFetchResult } from '@/types';
+import type { User } from '@supabase/supabase-js';
 
 export const fetchData = async <T>(options?: {
   table: string;
@@ -37,4 +38,47 @@ export const fetchData = async <T>(options?: {
   }
 
   return { data: data as unknown as T | null, error };
+};
+
+export const createData = async <T>(
+  table: string,
+  payload: T,
+  user_id: User['id']
+) => {
+  const { data, error } = await supabase
+    .from(table)
+    .insert({ ...payload, user_id })
+    .select('*');
+
+  if (error) {
+    console.error(error);
+    throw error;
+  }
+  return { data, error };
+};
+
+export const updateData = async <T>(
+  table: string,
+  payload: T,
+  user_id: User['id'],
+  options?: {
+    filters: Record<string, string | number>;
+  }
+) => {
+  let query = supabase.from(table).update({ ...payload });
+
+  if (options?.filters) {
+    Object.entries(options.filters).forEach(([col, val]) => {
+      query = query.eq(col, val as any);
+    });
+  }
+
+  const { data, error } = await query.eq('user_id', user_id);
+
+  if (error) {
+    console.error(error);
+    throw error;
+  }
+
+  return { data, error };
 };

@@ -1,7 +1,7 @@
 import { supabase } from '@/lib/supabase';
 import type { Client, Project, SupabaseFetchResult, Task } from '@/types';
 import type { PostgrestResponse, User } from '@supabase/supabase-js';
-import { fetchData } from './call-api';
+import { fetchData, updateData } from './call-api';
 
 export type TaskWithProject = Task & {
   projects: Project;
@@ -40,18 +40,13 @@ export const updateTask = async (
   client_id: Client['id'],
   task_id: Task['id']
 ) => {
-  const { data, error } = await supabase
-    .from('tasks')
-    .update({ ...taskData })
-    .eq('user_id', user_id)
-    .eq('id', task_id)
-    .eq('client_id', client_id);
-
-  if (error) {
-    console.error(error);
-    throw error;
-  }
-  return { data, error };
+  return updateData('tasks', taskData, user_id, {
+    filters: {
+      user_id,
+      client_id,
+      id: task_id,
+    },
+  });
 };
 
 export const createTask = async (
