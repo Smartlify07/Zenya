@@ -12,9 +12,11 @@ import { Avatar, AvatarFallback } from '../ui/avatar';
 import { AvatarImage } from '@radix-ui/react-avatar';
 import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
+import { useNavigate } from '@tanstack/react-router';
 
 export const ClientsTable = ({ clients }: { clients: Client[] }) => {
   const tableHeadClassName = 'text-neutral-600 font-normal text-sm';
+  const navigate = useNavigate();
   return (
     <Table>
       <TableCaption>A list of your clients.</TableCaption>
@@ -30,7 +32,15 @@ export const ClientsTable = ({ clients }: { clients: Client[] }) => {
       <TableBody>
         {clients.map((client) => (
           <TableRow className="text-primary text-sm" key={client.id}>
-            <TableCell className="flex items-center gap-2">
+            <TableCell
+              onClick={() => {
+                navigate({
+                  to: '/clients/$clientId',
+                  params: { clientId: client.id as string },
+                });
+              }}
+              className="flex items-center cursor-pointer gap-2"
+            >
               <Avatar>
                 <AvatarFallback>{client.name.charAt(0)}</AvatarFallback>
                 <AvatarImage src={client?.avatar} />

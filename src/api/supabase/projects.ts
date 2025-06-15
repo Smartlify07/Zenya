@@ -41,6 +41,27 @@ export const fetchProjectsByIds = async (
   return { data: data as Project[], error: null };
 };
 
+export const fetchProjectsForClient = async (
+  client_id: string,
+  user_id: string
+): Promise<{
+  data: Project[] | null;
+  error: PostgrestResponse<Project>['error'];
+}> => {
+  const { data, error } = await supabase
+    .from('projects')
+    .select('*')
+    .eq('client_id', client_id)
+    .eq('user_id', user_id);
+
+  if (error) {
+    console.error('Error fetching projects by IDs:', error);
+    return { data: null, error };
+  }
+
+  return { data: data as Project[], error: null };
+};
+
 export const createProject = async (
   projectData: Omit<Project, 'id' | 'milestones'>,
   user_id: User['id']
