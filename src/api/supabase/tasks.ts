@@ -55,7 +55,7 @@ export const updateTask = async (
 };
 
 export const createTask = async (
-  taskData: Omit<Task, 'id' | 'milestones'>,
+  taskData: Omit<Task, 'id' | 'milestones' | 'projects' | 'clients'>,
   user_id: User['id']
 ) => {
   const { data, error } = await supabase

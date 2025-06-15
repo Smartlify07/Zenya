@@ -41,7 +41,7 @@ export const fetchProjectById = async (
 };
 
 export const createProject = async (
-  projectData: Omit<Project, 'id' | 'milestones'>,
+  projectData: Omit<Project, 'id' | 'milestones' | 'clients' | 'tasks'>,
   user_id: User['id']
 ) => {
   const { data, error } = await supabase
