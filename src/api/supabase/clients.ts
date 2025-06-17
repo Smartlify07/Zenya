@@ -1,7 +1,6 @@
-import { supabase } from '@/lib/supabase';
 import type { Client, SupabaseFetchResult } from '@/types';
-import type { PostgrestResponse, User } from '@supabase/supabase-js';
-import { fetchData } from './call-api';
+import type { User } from '@supabase/supabase-js';
+import { createData, fetchData } from './call-api';
 
 export const fetchClients = async (
   user_id: string
@@ -36,42 +35,9 @@ export const fetchClientById = async (
   });
 };
 
-export const fetchClientsByIds = async (
-  clientIds: string[],
-  userId: string
-): Promise<{
-  data: Client[] | null;
-  error: PostgrestResponse<Client>['error'];
-}> => {
-  if (!clientIds || clientIds.length === 0) {
-    return { data: [], error: null };
-  }
-
-  const { data, error } = await supabase
-    .from('clients')
-    .select('*')
-    .in('id', clientIds)
-    .eq('user_id', userId);
-
-  if (error) {
-    console.error('Error fetching clients by IDs:', error);
-    return { data: null, error };
-  }
-
-  return { data: data as Client[], error: null };
-};
-
 export const createClient = async (
   clientData: Omit<Client, 'id'>,
   user_id: User['id']
 ) => {
-  const { data, error } = await supabase
-    .from('clients')
-    .insert({ ...clientData, user_id });
-
-  if (error) {
-    console.error(error);
-    throw error;
-  }
-  return { data, error };
+  return createData('clients', clientData, user_id);
 };
