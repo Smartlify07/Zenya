@@ -1,7 +1,6 @@
-import { supabase } from '@/lib/supabase';
 import type { Client, Project, SupabaseFetchResult, Task } from '@/types';
 import type { PostgrestResponse, User } from '@supabase/supabase-js';
-import { fetchData, updateData } from './call-api';
+import { createData, fetchData, updateData } from './call-api';
 
 export type TaskWithProject = Task & {
   projects: Project;
@@ -53,13 +52,5 @@ export const createTask = async (
   taskData: Omit<Task, 'id' | 'milestones' | 'projects' | 'clients'>,
   user_id: User['id']
 ) => {
-  const { data, error } = await supabase
-    .from('tasks')
-    .insert({ ...taskData, user_id });
-
-  if (error) {
-    console.error(error);
-    throw error;
-  }
-  return { data, error };
+  return createData('tasks', taskData, user_id);
 };
