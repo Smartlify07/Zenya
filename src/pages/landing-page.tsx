@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { useNavigate, useRouter } from '@tanstack/react-router';
 
 export default function LandingPage() {
   return (
@@ -9,6 +10,7 @@ export default function LandingPage() {
 }
 
 function HeroSection() {
+  const router = useNavigate();
   return (
     <section className="py-20 flex items-center font-inter flex-col gap-4">
       <h1 className="font-inter text-6xl w-7/12 font-medium text-center text-neutral-50 tracking-tight">
@@ -21,7 +23,12 @@ function HeroSection() {
       </p>
 
       <div className="flex items-center gap-6 mt-10">
-        <Button className="bg-neutral-50 hover:bg-neutral-100 text-neutral-950 w-full">
+        <Button
+          onClick={() => {
+            router({ to: '/signup' });
+          }}
+          className="bg-neutral-50 hover:bg-neutral-100 text-neutral-950 w-full"
+        >
           Get Started Now
         </Button>
       </div>
