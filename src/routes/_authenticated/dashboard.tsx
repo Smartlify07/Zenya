@@ -1,22 +1,15 @@
-import UpcomingTasks from '@/components/dashboard/upcoming-tasks';
+import { GreetingSection } from '@/components/dashboard/greeting-section';
 import { RecentClients } from '@/components/dashboard/recent-clients';
-
-import { SummaryCard } from '@/components/dashboard/summary-card';
-import { createFileRoute } from '@tanstack/react-router';
-import { CheckCircle, FolderKanban, Receipt, Users } from 'lucide-react';
-import { RecentInvoices } from '@/components/dashboard/recent-invoices';
-import { useClients } from '@/hooks/useClients';
-import { useTasks } from '@/hooks/useTasks';
-import { useProjects } from '@/hooks/useProjects';
-import { useInvoices } from '@/hooks/useInvoices';
-import { DashboardSkeleton } from '@/components/skeletons/dashboard-skeleton';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { useSelectedQuickAction } from '@/context/selected-quick-action-provider';
-import { ClientForm } from '@/components/forms/client-form';
-import { useAuth } from '@/context/auth-provider';
-import { ProjectForm } from '@/components/forms/project-form';
 import { RecentProjects } from '@/components/dashboard/recent-projects';
-import { TaskForm } from '@/components/forms/task-form';
+import { SanityStats } from '@/components/dashboard/sanity-stats';
+import { TodaysFlow } from '@/components/dashboard/todays-flow';
+import { Dialog } from '@/components/ui/dialog';
+import { useAuth } from '@/context/auth-provider';
+import { useClients } from '@/hooks/useClients';
+import { useProjects } from '@/hooks/useProjects';
+import { useTasks } from '@/hooks/useTasks';
+import { createFileRoute } from '@tanstack/react-router';
+import { useMemo } from 'react';
 
 export const Route = createFileRoute('/_authenticated/dashboard')({
   component: Dashboard,
@@ -24,105 +17,46 @@ export const Route = createFileRoute('/_authenticated/dashboard')({
 
 function Dashboard() {
   const { user } = useAuth();
-  const {
-    data: clients,
-    error: clientsError,
-    isLoading: isLoadingClients,
-  } = useClients();
 
-  const {
-    data: tasks,
-    error: tasksError,
-    isLoading: isLoadingTasks,
-  } = useTasks();
+  const tasksQuery = useTasks();
 
-  const {
-    data: projects,
-    error: projectsError,
-    isLoading: isLoadingProjects,
-  } = useProjects();
+  const clientsQuery = useClients();
 
-  const {
-    data: invoices,
-    error: invoicesError,
-    isLoading: isLoadingInvoices,
-  } = useInvoices();
+  const projectsQuery = useProjects();
 
-  const isLoading =
-    isLoadingClients ||
-    isLoadingTasks ||
-    isLoadingProjects ||
-    isLoadingInvoices;
+  const tasks = tasksQuery?.data?.data?.slice(0, 2) ?? [];
 
-  const error = clientsError || tasksError || projectsError || invoicesError;
+  const recentClients = clientsQuery.data?.data ?? [];
 
-  const { selectedQuickAction, showDialog } = useSelectedQuickAction();
-  if (isLoading) {
-    return <DashboardSkeleton />;
-  }
+  const recentProjects = projectsQuery.data?.data?.slice(0, 3) ?? [];
 
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <p>Error: {error.message}</p>
-      </div>
-    );
-  }
+  const activeClients = useMemo(() => {
+    return recentClients
+      ?.filter((client) => client.status === 'active')
+      .slice(0, 3);
+  }, [recentClients]);
 
   return (
-    <main className="flex flex-col font-inter px-4 pb-5 items-center">
-      <div className="max-w-[1440px] flex flex-col gap-10 w-full">
-        <div className="grid gap-4 grid-cols-4 w-full">
-          <SummaryCard
-            title="Clients"
-            value={clients?.data?.length ?? 0}
-            Icon={Users}
-          />
-          <SummaryCard
-            title="Projects"
-            value={projects?.data?.length ?? 0}
-            Icon={FolderKanban}
-          />
-          <SummaryCard
-            title="Tasks Due"
-            value={tasks?.data?.length ?? 0}
-            Icon={CheckCircle}
-          />
-          <SummaryCard
-            title="Invoices Owed"
-            value={`₦ ${Number(80000).toLocaleString('en-NG')}`}
-            Icon={Receipt}
-          />
-        </div>
-        <Dialog>
-          {showDialog && (
-            <DialogContent aria-describedby={`${selectedQuickAction}-form`}>
-              {selectedQuickAction === 'client' && (
-                <ClientForm user_id={user?.id} />
-              )}
-              {selectedQuickAction === 'project' && (
-                <ProjectForm user_id={user?.id} />
-              )}
-
-              {selectedQuickAction === 'task' && (
-                <TaskForm user_id={user?.id} />
-              )}
-            </DialogContent>
-          )}
-          <div className="flex items-start gap-10 flex-col md:flex-row justify-between">
-            <RecentClients clients={clients?.data ?? []} />
-            <RecentProjects
-              user_id={user?.id}
-              projects={projects?.data ?? []}
+    <main className="flex items-center justify-center">
+      <Dialog>
+        <div className="flex flex-col max-w-[1440px] w-full gap-6 px-5 py-5">
+          <div className="flex items-start gap-10">
+            <div className="flex md:w-6/12 flex-col gap-6">
+              <GreetingSection tasks={tasks} name={user?.user_metadata?.name} />
+              <TodaysFlow tasks={tasks} />
+            </div>
+            <SanityStats
+              activeClients={activeClients?.length ?? 0}
+              completedTasks={tasks.length}
             />
           </div>
 
-          <section className="w-full flex flex-col justify-between gap-10 md:flex-row">
-            <UpcomingTasks user_id={user?.id} tasks={tasks?.data ?? []} />
-            <RecentInvoices invoices={invoices?.data ?? []} />
-          </section>
-        </Dialog>
-      </div>
+          <div className="mt-5 gap-6 flex items-start">
+            <RecentClients clients={recentClients ?? []} />
+            <RecentProjects projects={recentProjects ?? []} />
+          </div>
+        </div>
+      </Dialog>
     </main>
   );
 }

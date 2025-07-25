@@ -1,32 +1,20 @@
 import type { Client } from '@/types';
-import { Card } from '../ui/card';
+import { Card, CardFooter, CardHeader } from '../ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { Building2 } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
 import { EmptyStateCard } from './empty-state-card';
-import { buttonVariants } from '../ui/button';
-import { useSelectedQuickAction } from '@/context/selected-quick-action-provider';
-import { DialogTrigger } from '@radix-ui/react-dialog';
+import { useNavigate } from '@tanstack/react-router';
+import { Button } from '../ui/button';
 
 export const RecentClients = ({ clients }: { clients: Client[] }) => {
-  const { setSelectedQuickAction, setShowDialog } = useSelectedQuickAction();
   return (
-    <section className="w-full md:w-6/12 flex flex-col gap-4">
+    <section className="w-full md:w-6/12 font-inter flex flex-col gap-4">
       <div className="flex items-center w-full justify-between">
-        <h1 className="text-lg font-medium text-primary">Recent Clients</h1>
-
-        <DialogTrigger
-          className={buttonVariants({
-            variant: 'outline',
-          })}
-          onClick={() => {
-            setSelectedQuickAction('client');
-            setShowDialog(true);
-          }}
-        >
-          Add client
-        </DialogTrigger>
+        <h1 className="text-lg font-medium text-primary">
+          Recent active Clients
+        </h1>
       </div>
 
       {clients.length === 0 && (
@@ -48,28 +36,40 @@ export const RecentClients = ({ clients }: { clients: Client[] }) => {
 export const RecentClientsCard = ({
   name,
   email,
-  company,
   status,
   avatar,
+  id,
 }: Client) => {
+  const router = useNavigate();
   return (
     <Card className="shadow-none flex flex-col px-4 gap-4">
-      <div className="flex items-center gap-4">
-        <Avatar>
-          <AvatarImage src={avatar} alt={name} />
-          <AvatarFallback>{name.charAt(0)}</AvatarFallback>
-        </Avatar>
-        <div className="flex flex-col">
-          <h1 className="text-base font-medium">{name}</h1>
-          <p className="text-sm truncate text-neutral-600">{email}</p>
+      <CardHeader className="flex p-0 items-start justify-between gap-4">
+        <div
+          onClick={() => router({ to: `/clients/${id}` })}
+          className="flex items-center gap-4 cursor-pointer"
+        >
+          <Avatar>
+            <AvatarImage src={avatar} alt={name} />
+            <AvatarFallback className="uppercase text-sm">
+              {name.charAt(0)}
+              {name.charAt(1)}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col">
+            <h1 className="text-base font-medium">{name}</h1>
+            <p className="text-sm truncate text-neutral-600">{email}</p>
+          </div>
         </div>
-      </div>
+      </CardHeader>
 
-      <div className="flex items-center gap-4 justify-between">
-        <h3 className="text-sm flex items-center gap-1">
-          <Building2 size={14} className="text-neutral-600" />
-          {company || 'No Company'}
-        </h3>
+      <CardFooter className="flex items-center p-0 gap-4 justify-between">
+        <Button
+          variant={'ghost'}
+          onClick={() => router({ to: `/clients/${id}` })}
+          className="text-sm text-neutral-600 hover:text-neutral-800 transition"
+        >
+          View Client <ArrowRight size={16} />
+        </Button>
 
         <Badge
           className={cn(
@@ -80,7 +80,7 @@ export const RecentClientsCard = ({
         >
           {status}
         </Badge>
-      </div>
+      </CardFooter>
     </Card>
   );
 };

@@ -1,107 +1,31 @@
 import type { Task } from '@/types';
-import { Card, CardFooter, CardTitle } from '../ui/card';
-import { Calendar, Folder, User } from 'lucide-react';
-import { getRemainingDays } from '@/lib/utils/dateUtils';
-import { cn } from '@/lib/utils';
-import { Badge } from '../ui/badge';
-import { TaskStatusPopover } from './task-status-popover';
-import { getProjectDaysLeftColor } from '@/lib/utils/dashboardUtils';
-import { EmptyStateCard } from './empty-state-card';
-import { DialogTrigger } from '../ui/dialog';
-import { buttonVariants } from '../ui/button';
-import { useSelectedQuickAction } from '@/context/selected-quick-action-provider';
+import { Separator } from '../ui/separator';
 
-import type { User as SupabaseUser } from '@supabase/supabase-js';
-
-const UpcomingTasks = ({
-  tasks,
-  user_id,
-}: {
-  tasks: Task[];
-  user_id: SupabaseUser['id'] | undefined;
-}) => {
-  const { setSelectedQuickAction, setShowDialog } = useSelectedQuickAction();
-
+const UpcomingTasks = ({ tasks }: { tasks: Task[] }) => {
   return (
-    <section className="flex flex-col md:w-6/12 font-inter gap-5">
-      <div className="flex items-center w-full justify-between">
-        <h1 className="text-lg font-medium text-primary">Upcoming tasks</h1>
-
-        {tasks.length !== 0 && (
-          <DialogTrigger
-            className={buttonVariants({
-              variant: 'outline',
-            })}
-            onClick={() => {
-              setSelectedQuickAction('task');
-              setShowDialog(true);
-            }}
-          >
-            Add Task
-          </DialogTrigger>
-        )}
-      </div>
-
-      {tasks.length === 0 && (
-        <EmptyStateCard
-          title="No tasks available"
-          buttonText="Add your first task"
-          quickAction={'task'}
-        />
-      )}
-      <div className="grid gap-5">
-        {tasks.slice(0, 4).map((task) => (
-          <TaskCard key={task.id} user_id={user_id!} task={task} />
-        ))}
-      </div>
+    <section className="flex flex-col w-6/12 font-inter gap-4 shadow-2xs self-end mt-4 bg-white p-4 rounded-2xl">
+      <h1 className="text-base font-medium">Up next</h1>
+      {tasks.map((task) => (
+        <TaskCard task={task} key={task.id} />
+      ))}
     </section>
   );
 };
 
-const TaskCard = ({ task }: { task: Task; user_id: SupabaseUser['id'] }) => {
+const TaskCard = ({ task }: { task: Task }) => {
   return (
-    <Card className="shadow-2xs px-4">
-      <div className="flex items-center justify-between">
-        <CardTitle className="flex flex-col">
-          <h1 className="text-base font-medium text-primary truncate">
-            {task?.name}
-          </h1>
-          <p className="truncate text-sm font-normal  text-neutral-600">
-            {task?.description}
-          </p>
-        </CardTitle>
-        <div className="flex flex-col gap-1">
-          <div className="flex items-center gap-2">
-            <User size={16} className="text-neutral-600" />
-
-            <h2 className="text-primary text-sm truncate">
-              {task?.clients?.name}
-            </h2>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Folder size={16} className="text-neutral-600" />{' '}
-            <h1 className="truncate text-sm text-neutral-600">
-              {task?.projects?.name}
-            </h1>
-          </div>
-        </div>
+    <div className="flex items-center gap-3">
+      <Separator
+        orientation="vertical"
+        className="w-1 h-full bg-neutral-700 data-[orientation=vertical]:w-1 data-[orientation=vertical]:h-[40px]"
+      />
+      <div className="flex flex-col gap-1">
+        <h3 className="text-sm font-medium text-primary">{task.name}</h3>
+        <h4 className="text-neutral-400 font-normal text-xs">
+          {task.due_date}
+        </h4>
       </div>
-
-      <CardFooter className="flex items-center px-0 justify-between">
-        <Badge
-          variant={'outline'}
-          className={cn(
-            'text-sm text-neutral-600',
-            getProjectDaysLeftColor(getRemainingDays(task?.due_date))
-          )}
-        >
-          <Calendar size={16} /> Due in {getRemainingDays(task?.due_date)} days
-        </Badge>
-
-        <TaskStatusPopover client_id={''} task_id={''} status={task?.status} />
-      </CardFooter>
-    </Card>
+    </div>
   );
 };
 export default UpcomingTasks;
