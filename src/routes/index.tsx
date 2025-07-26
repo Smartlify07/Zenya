@@ -1,4 +1,3 @@
-import LandingPage from '@/pages/landing-page';
 import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/')({
@@ -6,5 +5,5 @@ export const Route = createFileRoute('/')({
 });
 
 function RouteComponent() {
-  return <LandingPage />;
+  return <>iNDEX PAGE</>;
 }
