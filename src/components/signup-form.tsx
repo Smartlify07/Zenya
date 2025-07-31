@@ -1,7 +1,6 @@
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { signUpWithEmail } from '@/services/signup.service';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,6 +18,7 @@ import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { useNavigate } from '@tanstack/react-router';
 import { toast } from 'sonner';
+import { createProfile } from '@/services/profile.service';
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -44,15 +44,34 @@ export function SignupForm({
 
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
-    try {
-      await signUpWithEmail(values.email, values.password);
-      router({ to: '/onboard' });
-    } catch (error) {
-      console.error(error);
+    const { data: signupData, error: signupError } = await signUpWithEmail(
+      values.email,
+      values.password
+    );
+
+    if (signupError) {
       setIsLoading(false);
       toast.error('An error occurred signing you up.');
-    } finally {
-      setIsLoading(false);
+      throw new Error(signupError.message);
+    }
+    const user = signupData.user;
+
+    if (user) {
+      const { error: profileError } = await createProfile(
+        {
+          email: values.email,
+          name: values.name,
+          business_name: '',
+          phone_number: '',
+        },
+        user.id
+      );
+      if (profileError) {
+        setIsLoading(false);
+        toast.error('An error occurred ');
+        throw new Error(profileError.message);
+      }
+      await router({ to: '/onboard' });
     }
   };
 
