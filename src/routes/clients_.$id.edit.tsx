@@ -22,8 +22,11 @@ function RouteComponent() {
     lead_source: data?.lead_source ?? '',
   };
   return (
-    <main className="flex items-center font-inter justify-center">
-      <div className="border w-4xl">
+    <main className="flex flex-col items-center min-h-screen font-inter justify-center">
+      <header className="">
+        <h1 className="text-3xl font-medium">Edit Client</h1>
+      </header>
+      <div className="w-full md:w-6/12 ">
         <ClientForm
           buttonText="Save"
           redirectURL="/clients"
