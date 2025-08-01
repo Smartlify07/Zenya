@@ -1,48 +1,24 @@
-import { supabase } from '@/lib/supabase';
+import {
+  createClient,
+  deleteClient,
+  editClient,
+  getClientById,
+  getClients,
+} from '@/api/client.api';
 import type { Client } from '@/types';
-import type { User } from '@supabase/supabase-js';
+import type {
+  CreateClientVariables,
+  EditClientVariables,
+} from '@/types/client.types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-export type CreateClientData = Omit<Client, 'id'>;
-type CreateClientVariables = {
-  newClient: CreateClientData;
-  user_id: User['id'];
-};
-
-const createClient = async (data: CreateClientData, user_id: User['id']) => {
-  const { data: clients, error } = await supabase
-    .from('clients')
-    .insert({ ...data, user_id })
-    .select();
-
-  if (error) {
-    throw error;
-  }
-
-  return clients;
-};
-
-const getClients = async () => {
-  const { data: clients, error } = await supabase.from('clients').select('*');
-  if (error) {
-    throw error;
-  }
-  return clients;
-};
-
-const deleteClient = async (client_id: Client['id']) => {
-  const { data, error } = await supabase
-    .from('clients')
-    .delete()
-    .eq('id', client_id);
-  if (error) {
-    throw error;
-  }
-  return data;
-};
+// Hooks for queries
 
 export const useGetClients = () =>
   useQuery({ queryFn: getClients, queryKey: ['clients'] });
+
+export const useGetClientById = (id: Client['id']) =>
+  useQuery({ queryFn: () => getClientById(id), queryKey: ['clients', id] });
 
 export const useCreateClient = () => {
   const query = useQueryClient();
@@ -56,11 +32,11 @@ export const useCreateClient = () => {
 
       const previousClients = query.getQueryData(['clients']);
 
-      query.setQueryData(['clients'], (old: Client[]) => {
-        if (!old) {
+      query.setQueryData(['clients'], (oldClients: Client[]) => {
+        if (!oldClients) {
           return [newClient];
         }
-        return [...old, newClient];
+        return [...oldClients, newClient];
       });
 
       return { previousClients };
@@ -80,6 +56,45 @@ export const useCreateClient = () => {
       }
       query.invalidateQueries({
         queryKey: ['clients'],
+      });
+    },
+  });
+};
+
+export const useEditClient = () => {
+  const query = useQueryClient();
+  return useMutation({
+    mutationFn: ({ client_id, client, user_id }: EditClientVariables) => {
+      return editClient(client_id, user_id, client);
+    },
+
+    onMutate: async ({ client, client_id }: EditClientVariables) => {
+      await query.cancelQueries({ queryKey: ['clients', client_id] });
+
+      const previousClients = query.getQueryData(['clients', client_id]);
+
+      query.setQueryData(['clients', client_id], client);
+
+      return { previousClients, client, client_id };
+    },
+
+    onError: (err, __, context) => {
+      query.setQueryData(
+        ['clients', context?.client_id],
+        context?.previousClients
+      );
+      console.error('Error from Supabase:', err);
+      throw new Error(
+        `Failed to create client: ${err.message || 'Unknown error'}`
+      );
+    },
+
+    onSettled: (_, error, __, context) => {
+      if (error) {
+        console.error(error);
+      }
+      query.invalidateQueries({
+        queryKey: ['clients', context?.client_id],
       });
     },
   });
