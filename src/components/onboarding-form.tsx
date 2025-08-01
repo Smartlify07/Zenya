@@ -15,7 +15,6 @@ import {
 } from './ui/form';
 import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
-import { useNavigate } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import {
   Select,
@@ -34,9 +33,12 @@ const formSchema = z.object({
 });
 
 export default function OnboardingForm({
+  onNext,
   className,
   ...props
-}: React.ComponentProps<'form'>) {
+}: React.ComponentProps<'form'> & {
+  onNext: () => void;
+}) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -46,7 +48,6 @@ export default function OnboardingForm({
     },
   });
   const { user } = useAuth();
-  const router = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -58,8 +59,8 @@ export default function OnboardingForm({
       throw new Error(error.message);
     }
 
-    await router({ to: '/dashboard' });
     setIsLoading(false);
+    onNext();
 
     return data;
   };

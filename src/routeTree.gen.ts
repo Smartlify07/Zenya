@@ -14,7 +14,9 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as SignupImport } from './routes/signup'
 import { Route as OnboardImport } from './routes/onboard'
 import { Route as DashboardImport } from './routes/dashboard'
+import { Route as ClientsImport } from './routes/clients'
 import { Route as IndexImport } from './routes/index'
+import { Route as ClientsCreateImport } from './routes/clients_.create'
 
 // Create/Update Routes
 
@@ -36,9 +38,21 @@ const DashboardRoute = DashboardImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ClientsRoute = ClientsImport.update({
+  id: '/clients',
+  path: '/clients',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ClientsCreateRoute = ClientsCreateImport.update({
+  id: '/clients_/create',
+  path: '/clients/create',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -51,6 +65,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/clients': {
+      id: '/clients'
+      path: '/clients'
+      fullPath: '/clients'
+      preLoaderRoute: typeof ClientsImport
       parentRoute: typeof rootRoute
     }
     '/dashboard': {
@@ -74,6 +95,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupImport
       parentRoute: typeof rootRoute
     }
+    '/clients_/create': {
+      id: '/clients_/create'
+      path: '/clients/create'
+      fullPath: '/clients/create'
+      preLoaderRoute: typeof ClientsCreateImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -81,47 +109,76 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/clients': typeof ClientsRoute
   '/dashboard': typeof DashboardRoute
   '/onboard': typeof OnboardRoute
   '/signup': typeof SignupRoute
+  '/clients/create': typeof ClientsCreateRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/clients': typeof ClientsRoute
   '/dashboard': typeof DashboardRoute
   '/onboard': typeof OnboardRoute
   '/signup': typeof SignupRoute
+  '/clients/create': typeof ClientsCreateRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/clients': typeof ClientsRoute
   '/dashboard': typeof DashboardRoute
   '/onboard': typeof OnboardRoute
   '/signup': typeof SignupRoute
+  '/clients_/create': typeof ClientsCreateRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/onboard' | '/signup'
+  fullPaths:
+    | '/'
+    | '/clients'
+    | '/dashboard'
+    | '/onboard'
+    | '/signup'
+    | '/clients/create'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/onboard' | '/signup'
-  id: '__root__' | '/' | '/dashboard' | '/onboard' | '/signup'
+  to:
+    | '/'
+    | '/clients'
+    | '/dashboard'
+    | '/onboard'
+    | '/signup'
+    | '/clients/create'
+  id:
+    | '__root__'
+    | '/'
+    | '/clients'
+    | '/dashboard'
+    | '/onboard'
+    | '/signup'
+    | '/clients_/create'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ClientsRoute: typeof ClientsRoute
   DashboardRoute: typeof DashboardRoute
   OnboardRoute: typeof OnboardRoute
   SignupRoute: typeof SignupRoute
+  ClientsCreateRoute: typeof ClientsCreateRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ClientsRoute: ClientsRoute,
   DashboardRoute: DashboardRoute,
   OnboardRoute: OnboardRoute,
   SignupRoute: SignupRoute,
+  ClientsCreateRoute: ClientsCreateRoute,
 }
 
 export const routeTree = rootRoute
@@ -135,13 +192,18 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/clients",
         "/dashboard",
         "/onboard",
-        "/signup"
+        "/signup",
+        "/clients_/create"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/clients": {
+      "filePath": "clients.tsx"
     },
     "/dashboard": {
       "filePath": "dashboard.tsx"
@@ -151,6 +213,9 @@ export const routeTree = rootRoute
     },
     "/signup": {
       "filePath": "signup.tsx"
+    },
+    "/clients_/create": {
+      "filePath": "clients_.create.tsx"
     }
   }
 }
