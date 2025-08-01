@@ -19,8 +19,10 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from './ui/button';
 import { toast } from 'sonner';
+import { useNavigate } from '@tanstack/react-router';
 
 const ClientList = ({}: { userId: string }) => {
+  const router = useNavigate();
   const { data, error, isLoading } = useGetClients();
   const deleteMutation = useDeleteClient();
   const clients = data;
@@ -36,11 +38,9 @@ const ClientList = ({}: { userId: string }) => {
   const handleDelete = async (client_id: Client['id']) => {
     deleteMutation.mutate(client_id, {
       onSuccess: () => {
-        // This will only run if the DELETE request to Supabase was successful.
         toast.success('Client deleted successfully');
       },
       onError: (error) => {
-        // This will only run if the DELETE request to Supabase failed.
         console.error(error);
         toast.error('An error occurred deleting that client');
       },
@@ -79,7 +79,13 @@ const ClientList = ({}: { userId: string }) => {
                     <DropdownMenuLabel className="font-inter">
                       Actions
                     </DropdownMenuLabel>
-                    <DropdownMenuItem>Edit Client</DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        router({ to: `/clients/${client.id}/edit` });
+                      }}
+                    >
+                      Edit Client
+                    </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => {
                         handleDelete(client.id);

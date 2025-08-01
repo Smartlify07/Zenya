@@ -14,11 +14,11 @@ import {
 } from './ui/form';
 
 import { Loader2 } from 'lucide-react';
-import { useNavigate } from '@tanstack/react-router';
-import { useCreateClient } from '@/services/client.service';
+import { useNavigate, useParams } from '@tanstack/react-router';
+import { useCreateClient, useEditClient } from '@/services/client.service';
 import { useAuth } from '@/context/auth-provider';
 import { toast } from 'sonner';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -31,10 +31,12 @@ const formSchema = z.object({
 type ClientForm = {
   buttonText: string;
   redirectURL: string;
+  initialValues?: z.infer<typeof formSchema>;
 };
 
 export function ClientForm({
   buttonText,
+  initialValues,
   redirectURL,
   className,
   ...props
@@ -42,38 +44,51 @@ export function ClientForm({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
-      email: '',
-      lead_source: '',
-      status: 'active',
-      company: '',
+      name: initialValues?.name,
+      email: initialValues?.email,
+      lead_source: initialValues?.lead_source,
+      status: initialValues?.status ?? 'active',
+      company: initialValues?.company,
     },
   });
   const router = useNavigate();
-
   const [isLoading, setIsLoading] = useState(false);
   const mutateClient = useCreateClient();
+  const editMutation = useEditClient();
+  const params = useParams({ from: '/clients_/$id/edit' });
   const { user } = useAuth();
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setIsLoading(true);
 
-      await mutateClient.mutateAsync({
-        newClient: values,
-        user_id: user?.id!,
-      });
+      if (!initialValues) {
+        await mutateClient.mutateAsync({
+          newClient: values,
+          user_id: user?.id!,
+        });
+      } else {
+        await editMutation.mutateAsync({
+          client: values,
+          client_id: params.id,
+          user_id: user?.id!,
+        });
+      }
       router({ to: redirectURL });
     } catch (error) {
       toast.error('An error occurred');
       setIsLoading(false);
+      console.error(error);
       throw new Error(
         error instanceof Error ? error.message : 'An error occurred' + error
       );
-      console.error(error);
     } finally {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (initialValues) form.reset(initialValues);
+  }, [initialValues, form.reset]);
 
   return (
     <Form {...form}>

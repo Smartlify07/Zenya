@@ -17,6 +17,7 @@ import { Route as DashboardImport } from './routes/dashboard'
 import { Route as ClientsImport } from './routes/clients'
 import { Route as IndexImport } from './routes/index'
 import { Route as ClientsCreateImport } from './routes/clients_.create'
+import { Route as ClientsIdEditImport } from './routes/clients_.$id.edit'
 
 // Create/Update Routes
 
@@ -53,6 +54,12 @@ const IndexRoute = IndexImport.update({
 const ClientsCreateRoute = ClientsCreateImport.update({
   id: '/clients_/create',
   path: '/clients/create',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ClientsIdEditRoute = ClientsIdEditImport.update({
+  id: '/clients_/$id/edit',
+  path: '/clients/$id/edit',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -102,6 +109,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClientsCreateImport
       parentRoute: typeof rootRoute
     }
+    '/clients_/$id/edit': {
+      id: '/clients_/$id/edit'
+      path: '/clients/$id/edit'
+      fullPath: '/clients/$id/edit'
+      preLoaderRoute: typeof ClientsIdEditImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -114,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/onboard': typeof OnboardRoute
   '/signup': typeof SignupRoute
   '/clients/create': typeof ClientsCreateRoute
+  '/clients/$id/edit': typeof ClientsIdEditRoute
 }
 
 export interface FileRoutesByTo {
@@ -123,6 +138,7 @@ export interface FileRoutesByTo {
   '/onboard': typeof OnboardRoute
   '/signup': typeof SignupRoute
   '/clients/create': typeof ClientsCreateRoute
+  '/clients/$id/edit': typeof ClientsIdEditRoute
 }
 
 export interface FileRoutesById {
@@ -133,6 +149,7 @@ export interface FileRoutesById {
   '/onboard': typeof OnboardRoute
   '/signup': typeof SignupRoute
   '/clients_/create': typeof ClientsCreateRoute
+  '/clients_/$id/edit': typeof ClientsIdEditRoute
 }
 
 export interface FileRouteTypes {
@@ -144,6 +161,7 @@ export interface FileRouteTypes {
     | '/onboard'
     | '/signup'
     | '/clients/create'
+    | '/clients/$id/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -152,6 +170,7 @@ export interface FileRouteTypes {
     | '/onboard'
     | '/signup'
     | '/clients/create'
+    | '/clients/$id/edit'
   id:
     | '__root__'
     | '/'
@@ -160,6 +179,7 @@ export interface FileRouteTypes {
     | '/onboard'
     | '/signup'
     | '/clients_/create'
+    | '/clients_/$id/edit'
   fileRoutesById: FileRoutesById
 }
 
@@ -170,6 +190,7 @@ export interface RootRouteChildren {
   OnboardRoute: typeof OnboardRoute
   SignupRoute: typeof SignupRoute
   ClientsCreateRoute: typeof ClientsCreateRoute
+  ClientsIdEditRoute: typeof ClientsIdEditRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -179,6 +200,7 @@ const rootRouteChildren: RootRouteChildren = {
   OnboardRoute: OnboardRoute,
   SignupRoute: SignupRoute,
   ClientsCreateRoute: ClientsCreateRoute,
+  ClientsIdEditRoute: ClientsIdEditRoute,
 }
 
 export const routeTree = rootRoute
@@ -196,7 +218,8 @@ export const routeTree = rootRoute
         "/dashboard",
         "/onboard",
         "/signup",
-        "/clients_/create"
+        "/clients_/create",
+        "/clients_/$id/edit"
       ]
     },
     "/": {
@@ -216,6 +239,9 @@ export const routeTree = rootRoute
     },
     "/clients_/create": {
       "filePath": "clients_.create.tsx"
+    },
+    "/clients_/$id/edit": {
+      "filePath": "clients_.$id.edit.tsx"
     }
   }
 }
