@@ -20,12 +20,18 @@ import { toast } from 'sonner';
 import { useNavigate } from '@tanstack/react-router';
 import { useDeleteProject, useGetProjects } from '@/services/projects.service';
 import { ProjectBadge } from './project-badge';
+import { ConfirmationModal } from './confirmation-modal';
+import { useState } from 'react';
 
 const ProjectList = ({ userId }: { userId: string }) => {
   const router = useNavigate();
   const { data, error, isLoading } = useGetProjects(userId);
   const deleteMutation = useDeleteProject();
   const projects = data;
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
+    null
+  );
 
   if (isLoading) {
     return <p>Loading..</p>;
@@ -86,12 +92,16 @@ const ProjectList = ({ userId }: { userId: string }) => {
                     >
                       Edit Project
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => {
-                        handleDelete(project.id);
-                      }}
-                    >
-                      Delete Project
+                    <DropdownMenuItem>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setSelectedProjectId(project.id as string);
+                          setIsOpen(true);
+                        }}
+                      >
+                        Delete project
+                      </button>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -100,6 +110,25 @@ const ProjectList = ({ userId }: { userId: string }) => {
           ))}
         </TableBody>
       </Table>
+
+      <ConfirmationModal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        variant="danger"
+        title="Delete this Project?"
+        description="This will permanently remove this project and any related data. This action cannot be undone."
+        action={{
+          text: 'Delete Project',
+          action: () => handleDelete(selectedProjectId as string),
+        }}
+        cancel={{
+          action: () => {
+            setIsOpen(false);
+            setSelectedProjectId(null);
+          },
+          text: 'Cancel',
+        }}
+      />
 
       {error && <h1 className="text-base font-inter font-medium">{error}</h1>}
     </div>
