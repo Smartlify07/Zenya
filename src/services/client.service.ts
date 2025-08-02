@@ -4,7 +4,7 @@ import {
   editClient,
   getClientById,
   getClients,
-} from '@/api/client.api';
+} from '@/api/clients.api';
 import type { Client } from '@/types';
 import type {
   CreateClientVariables,
@@ -16,7 +16,7 @@ const STALE_TIME = 10000;
 // Hooks for queries
 
 export const useGetClients = () =>
-  useQuery({
+  useQuery<Client[]>({
     queryFn: getClients,
     queryKey: ['clients'],
     staleTime: STALE_TIME,

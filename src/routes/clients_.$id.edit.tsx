@@ -1,6 +1,5 @@
 import { ClientForm } from '@/components/client-form';
 import { useGetClientById } from '@/services/client.service';
-import { QueryClient } from '@tanstack/react-query';
 import { createFileRoute, useParams } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/clients_/$id/edit')({
@@ -14,9 +13,6 @@ function RouteComponent() {
 
   const response = useGetClientById(params.id);
   const data = response.data;
-  const queryClient = new QueryClient();
-  const queryData = queryClient.getQueryData(['clients']);
-  console.log(queryData);
 
   const initialValues = {
     name: data?.name ?? '',
