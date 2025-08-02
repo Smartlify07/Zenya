@@ -12,11 +12,14 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as SignupImport } from './routes/signup'
+import { Route as ProjectsImport } from './routes/projects'
 import { Route as OnboardImport } from './routes/onboard'
 import { Route as DashboardImport } from './routes/dashboard'
 import { Route as ClientsImport } from './routes/clients'
 import { Route as IndexImport } from './routes/index'
+import { Route as ProjectsCreateImport } from './routes/projects_.create'
 import { Route as ClientsCreateImport } from './routes/clients_.create'
+import { Route as ProjectsIdEditImport } from './routes/projects_.$id.edit'
 import { Route as ClientsIdEditImport } from './routes/clients_.$id.edit'
 
 // Create/Update Routes
@@ -24,6 +27,12 @@ import { Route as ClientsIdEditImport } from './routes/clients_.$id.edit'
 const SignupRoute = SignupImport.update({
   id: '/signup',
   path: '/signup',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ProjectsRoute = ProjectsImport.update({
+  id: '/projects',
+  path: '/projects',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -51,9 +60,21 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ProjectsCreateRoute = ProjectsCreateImport.update({
+  id: '/projects_/create',
+  path: '/projects/create',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const ClientsCreateRoute = ClientsCreateImport.update({
   id: '/clients_/create',
   path: '/clients/create',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ProjectsIdEditRoute = ProjectsIdEditImport.update({
+  id: '/projects_/$id/edit',
+  path: '/projects/$id/edit',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -95,6 +116,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardImport
       parentRoute: typeof rootRoute
     }
+    '/projects': {
+      id: '/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof ProjectsImport
+      parentRoute: typeof rootRoute
+    }
     '/signup': {
       id: '/signup'
       path: '/signup'
@@ -109,11 +137,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClientsCreateImport
       parentRoute: typeof rootRoute
     }
+    '/projects_/create': {
+      id: '/projects_/create'
+      path: '/projects/create'
+      fullPath: '/projects/create'
+      preLoaderRoute: typeof ProjectsCreateImport
+      parentRoute: typeof rootRoute
+    }
     '/clients_/$id/edit': {
       id: '/clients_/$id/edit'
       path: '/clients/$id/edit'
       fullPath: '/clients/$id/edit'
       preLoaderRoute: typeof ClientsIdEditImport
+      parentRoute: typeof rootRoute
+    }
+    '/projects_/$id/edit': {
+      id: '/projects_/$id/edit'
+      path: '/projects/$id/edit'
+      fullPath: '/projects/$id/edit'
+      preLoaderRoute: typeof ProjectsIdEditImport
       parentRoute: typeof rootRoute
     }
   }
@@ -126,9 +168,12 @@ export interface FileRoutesByFullPath {
   '/clients': typeof ClientsRoute
   '/dashboard': typeof DashboardRoute
   '/onboard': typeof OnboardRoute
+  '/projects': typeof ProjectsRoute
   '/signup': typeof SignupRoute
   '/clients/create': typeof ClientsCreateRoute
+  '/projects/create': typeof ProjectsCreateRoute
   '/clients/$id/edit': typeof ClientsIdEditRoute
+  '/projects/$id/edit': typeof ProjectsIdEditRoute
 }
 
 export interface FileRoutesByTo {
@@ -136,9 +181,12 @@ export interface FileRoutesByTo {
   '/clients': typeof ClientsRoute
   '/dashboard': typeof DashboardRoute
   '/onboard': typeof OnboardRoute
+  '/projects': typeof ProjectsRoute
   '/signup': typeof SignupRoute
   '/clients/create': typeof ClientsCreateRoute
+  '/projects/create': typeof ProjectsCreateRoute
   '/clients/$id/edit': typeof ClientsIdEditRoute
+  '/projects/$id/edit': typeof ProjectsIdEditRoute
 }
 
 export interface FileRoutesById {
@@ -147,9 +195,12 @@ export interface FileRoutesById {
   '/clients': typeof ClientsRoute
   '/dashboard': typeof DashboardRoute
   '/onboard': typeof OnboardRoute
+  '/projects': typeof ProjectsRoute
   '/signup': typeof SignupRoute
   '/clients_/create': typeof ClientsCreateRoute
+  '/projects_/create': typeof ProjectsCreateRoute
   '/clients_/$id/edit': typeof ClientsIdEditRoute
+  '/projects_/$id/edit': typeof ProjectsIdEditRoute
 }
 
 export interface FileRouteTypes {
@@ -159,27 +210,36 @@ export interface FileRouteTypes {
     | '/clients'
     | '/dashboard'
     | '/onboard'
+    | '/projects'
     | '/signup'
     | '/clients/create'
+    | '/projects/create'
     | '/clients/$id/edit'
+    | '/projects/$id/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/clients'
     | '/dashboard'
     | '/onboard'
+    | '/projects'
     | '/signup'
     | '/clients/create'
+    | '/projects/create'
     | '/clients/$id/edit'
+    | '/projects/$id/edit'
   id:
     | '__root__'
     | '/'
     | '/clients'
     | '/dashboard'
     | '/onboard'
+    | '/projects'
     | '/signup'
     | '/clients_/create'
+    | '/projects_/create'
     | '/clients_/$id/edit'
+    | '/projects_/$id/edit'
   fileRoutesById: FileRoutesById
 }
 
@@ -188,9 +248,12 @@ export interface RootRouteChildren {
   ClientsRoute: typeof ClientsRoute
   DashboardRoute: typeof DashboardRoute
   OnboardRoute: typeof OnboardRoute
+  ProjectsRoute: typeof ProjectsRoute
   SignupRoute: typeof SignupRoute
   ClientsCreateRoute: typeof ClientsCreateRoute
+  ProjectsCreateRoute: typeof ProjectsCreateRoute
   ClientsIdEditRoute: typeof ClientsIdEditRoute
+  ProjectsIdEditRoute: typeof ProjectsIdEditRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -198,9 +261,12 @@ const rootRouteChildren: RootRouteChildren = {
   ClientsRoute: ClientsRoute,
   DashboardRoute: DashboardRoute,
   OnboardRoute: OnboardRoute,
+  ProjectsRoute: ProjectsRoute,
   SignupRoute: SignupRoute,
   ClientsCreateRoute: ClientsCreateRoute,
+  ProjectsCreateRoute: ProjectsCreateRoute,
   ClientsIdEditRoute: ClientsIdEditRoute,
+  ProjectsIdEditRoute: ProjectsIdEditRoute,
 }
 
 export const routeTree = rootRoute
@@ -217,9 +283,12 @@ export const routeTree = rootRoute
         "/clients",
         "/dashboard",
         "/onboard",
+        "/projects",
         "/signup",
         "/clients_/create",
-        "/clients_/$id/edit"
+        "/projects_/create",
+        "/clients_/$id/edit",
+        "/projects_/$id/edit"
       ]
     },
     "/": {
@@ -234,14 +303,23 @@ export const routeTree = rootRoute
     "/onboard": {
       "filePath": "onboard.tsx"
     },
+    "/projects": {
+      "filePath": "projects.tsx"
+    },
     "/signup": {
       "filePath": "signup.tsx"
     },
     "/clients_/create": {
       "filePath": "clients_.create.tsx"
     },
+    "/projects_/create": {
+      "filePath": "projects_.create.tsx"
+    },
     "/clients_/$id/edit": {
       "filePath": "clients_.$id.edit.tsx"
+    },
+    "/projects_/$id/edit": {
+      "filePath": "projects_.$id.edit.tsx"
     }
   }
 }

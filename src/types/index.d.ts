@@ -41,7 +41,7 @@ export type Milestone = BaseType & {
 
 export type Project = BaseType & {
   name: string;
-  description: string;
+  description?: string;
   status: 'active' | 'completed' | 'on_hold';
   client_id: string;
   milestones: Milestone[] | null;
