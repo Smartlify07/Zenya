@@ -12,13 +12,22 @@ import type {
 } from '@/types/client.types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+const STALE_TIME = 10000;
 // Hooks for queries
 
 export const useGetClients = () =>
-  useQuery({ queryFn: getClients, queryKey: ['clients'] });
+  useQuery({
+    queryFn: getClients,
+    queryKey: ['clients'],
+    staleTime: STALE_TIME,
+  });
 
 export const useGetClientById = (id: Client['id']) =>
-  useQuery({ queryFn: () => getClientById(id), queryKey: ['clients', id] });
+  useQuery({
+    queryFn: () => getClientById(id),
+    queryKey: ['clients', id],
+    staleTime: STALE_TIME,
+  });
 
 export const useCreateClient = () => {
   const query = useQueryClient();
