@@ -11,7 +11,6 @@ export const Route = createFileRoute('/clients')({
 function RouteComponent() {
   const { user } = useAuth();
   const router = useNavigate();
-
   return (
     <main>
       <div className="p-10 max-w-4xl mx-auto">

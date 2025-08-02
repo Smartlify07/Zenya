@@ -14,7 +14,7 @@ import {
 } from './ui/form';
 
 import { Loader2 } from 'lucide-react';
-import { useNavigate, useParams } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { useCreateClient, useEditClient } from '@/services/client.service';
 import { useAuth } from '@/context/auth-provider';
 import { toast } from 'sonner';
@@ -32,12 +32,14 @@ type ClientForm = {
   buttonText: string;
   redirectURL: string;
   initialValues?: z.infer<typeof formSchema>;
+  client_id?: string;
 };
 
 export function ClientForm({
   buttonText,
   initialValues,
   redirectURL,
+  client_id,
   className,
   ...props
 }: React.ComponentProps<'form'> & ClientForm) {
@@ -52,11 +54,15 @@ export function ClientForm({
     },
   });
   const router = useNavigate();
+
   const [isLoading, setIsLoading] = useState(false);
+
   const mutateClient = useCreateClient();
+
   const editMutation = useEditClient();
-  const params = useParams({ from: '/clients_/$id/edit' });
+
   const { user } = useAuth();
+
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setIsLoading(true);
@@ -69,7 +75,7 @@ export function ClientForm({
       } else {
         await editMutation.mutateAsync({
           client: values,
-          client_id: params.id,
+          client_id: client_id!,
           user_id: user?.id!,
         });
       }
