@@ -20,12 +20,16 @@ import {
 import { Button } from './ui/button';
 import { toast } from 'sonner';
 import { useNavigate } from '@tanstack/react-router';
+import { ConfirmationModal } from './confirmation-modal';
+import { useState } from 'react';
 
 const ClientList = ({}: { userId: string }) => {
   const router = useNavigate();
   const { data, error, isLoading } = useGetClients();
   const deleteMutation = useDeleteClient();
   const clients = data;
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
 
   if (isLoading) {
     return <p>Loading..</p>;
@@ -79,19 +83,25 @@ const ClientList = ({}: { userId: string }) => {
                     <DropdownMenuLabel className="font-inter">
                       Actions
                     </DropdownMenuLabel>
-                    <DropdownMenuItem
-                      onClick={() => {
-                        router({ to: `/clients/${client.id}/edit` });
-                      }}
-                    >
-                      Edit Client
+                    <DropdownMenuItem>
+                      <button
+                        onClick={() => {
+                          router({ to: `/clients/${client.id}/edit` });
+                        }}
+                      >
+                        Edit Client
+                      </button>
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => {
-                        handleDelete(client.id);
-                      }}
-                    >
-                      Delete Client
+                    <DropdownMenuItem>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setSelectedClientId(client.id as string);
+                          setIsOpen(true);
+                        }}
+                      >
+                        Delete Client
+                      </button>{' '}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -101,6 +111,25 @@ const ClientList = ({}: { userId: string }) => {
         </TableBody>
       </Table>
 
+      <ConfirmationModal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        variant="danger"
+        title="Delete this client?"
+        description="This will remove the client and all linked projects, invoices, and reminders.
+This action cannot be undone."
+        action={{
+          text: 'Delete Client',
+          action: () => handleDelete(selectedClientId as string),
+        }}
+        cancel={{
+          action: () => {
+            setIsOpen(false);
+            setSelectedClientId(null);
+          },
+          text: 'Cancel',
+        }}
+      />
       {error && <h1 className="text-base font-inter font-medium">{error}</h1>}
     </div>
   );
