@@ -57,7 +57,7 @@ const ClientList = ({}: { userId: string }) => {
       <EmptyState
         Icon={User2}
         title={`You haven't added any clients yet`}
-        description=""
+        description="Start by adding your first client to track projects, reminders, and invoices."
         action={{
           action: () => router({ to: '/clients/create' }),
           text: 'Add new client',
