@@ -6,8 +6,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import type { Client, Project } from '@/types';
-import { MoreHorizontal } from 'lucide-react';
+import type { Project } from '@/types';
+import { Folder, MoreHorizontal } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,6 +22,8 @@ import { useDeleteProject, useGetProjects } from '@/services/projects.service';
 import { ProjectBadge } from './project-badge';
 import { ConfirmationModal } from './confirmation-modal';
 import { useState } from 'react';
+import ProjectsTableSkeleton from './skeletons/projects-list-skeleton';
+import EmptyState from './empty-states/empty-state';
 
 const ProjectList = ({ userId }: { userId: string }) => {
   const router = useNavigate();
@@ -32,17 +34,8 @@ const ProjectList = ({ userId }: { userId: string }) => {
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
     null
   );
-
-  if (isLoading) {
-    return <p>Loading..</p>;
-  }
-
-  if (error) {
-    return <p>{error.message}</p>;
-  }
-
-  const handleDelete = async (client_id: Client['id']) => {
-    deleteMutation.mutate(client_id, {
+  const handleDelete = async (project_id: Project['id']) => {
+    deleteMutation.mutate(project_id, {
       onSuccess: () => {
         toast.success('Project deleted successfully');
       },
@@ -53,13 +46,39 @@ const ProjectList = ({ userId }: { userId: string }) => {
     });
   };
 
+  if (isLoading) {
+    return <ProjectsTableSkeleton />;
+  }
+
+  if (error) {
+    return <p>{error.message}</p>;
+  }
+
+  if (projects?.length === 0) {
+    return (
+      <section className="flex items-center justify-center">
+        <EmptyState
+          Icon={Folder}
+          title="No projects yet"
+          description="Add a project to track your work and get paid faster."
+          action={{
+            text: 'Add new project',
+            action: () => {
+              router({ to: '/projects/create' });
+            },
+          }}
+        />
+      </section>
+    );
+  }
+
   return (
     <div className="px-10 max-w-4xl mx-auto">
       <Table>
         <TableHeader>
           <TableRow className="font-inter">
             <TableHead>Name</TableHead>
-            <TableHead className="hidden sm:table-cell">Email</TableHead>
+            <TableHead>Client Name</TableHead>
             <TableHead>Status</TableHead>
           </TableRow>
         </TableHeader>

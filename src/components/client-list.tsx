@@ -9,7 +9,7 @@ import {
 import { useDeleteClient, useGetClients } from '@/services/client.service';
 import type { Client } from '@/types';
 import { ClientBadge } from './client-badge';
-import { MoreHorizontal } from 'lucide-react';
+import { MoreHorizontal, User2 } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,6 +22,8 @@ import { toast } from 'sonner';
 import { useNavigate } from '@tanstack/react-router';
 import { ConfirmationModal } from './confirmation-modal';
 import { useState } from 'react';
+import ClientTableSkeleton from './skeletons/clients-table-skeleton';
+import EmptyState from './empty-states/empty-state';
 
 const ClientList = ({}: { userId: string }) => {
   const router = useNavigate();
@@ -30,15 +32,6 @@ const ClientList = ({}: { userId: string }) => {
   const clients = data;
   const [isOpen, setIsOpen] = useState(false);
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
-
-  if (isLoading) {
-    return <p>Loading..</p>;
-  }
-
-  if (error) {
-    return <p>{error.message}</p>;
-  }
-
   const handleDelete = async (client_id: Client['id']) => {
     deleteMutation.mutate(client_id, {
       onSuccess: () => {
@@ -50,6 +43,28 @@ const ClientList = ({}: { userId: string }) => {
       },
     });
   };
+
+  if (isLoading) {
+    return <ClientTableSkeleton />;
+  }
+
+  if (error) {
+    return <p>{error.message}</p>;
+  }
+
+  if (clients?.length === 0) {
+    return (
+      <EmptyState
+        Icon={User2}
+        title={`You haven't added any clients yet`}
+        description=""
+        action={{
+          action: () => router({ to: '/clients/create' }),
+          text: 'Add new client',
+        }}
+      />
+    );
+  }
 
   return (
     <div className="px-10 max-w-4xl mx-auto">
